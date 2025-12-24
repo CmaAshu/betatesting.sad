@@ -5,6 +5,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
 
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7792469883739877" crossorigin="anonymous"></script>
+
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -70,10 +73,6 @@
             .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
             .text-gradient-original { @apply bg-clip-text text-transparent bg-[linear-gradient(135deg,#10b981,#6366f1,#db2777,#f59e0b)]; }
             .scrollbar-gutter-stable { scrollbar-gutter: stable; }
-            .google-g-text {
-                background: conic-gradient(#4285f4 0deg 90deg, #34a853 90deg 180deg, #fbbc05 180deg 270deg, #ea4335 270deg 360deg);
-                -webkit-background-clip: text; -webkit-text-fill-color: transparent; @apply font-black;
-            }
         }
 
         @layer components {
@@ -94,9 +93,9 @@
             .mode-sjc { background-image: linear-gradient(white, white), linear-gradient(135deg, #036176, #024a5a); }
             .shape { @apply absolute bottom-[-150px] opacity-15 font-bold block will-change-transform animate-rise; line-height: 1; }
             
-            .article-body h2 { @apply text-xl md:text-2xl font-black text-slate-800 mt-10 mb-5 flex items-center gap-2; }
-            .article-body h3 { @apply text-lg font-bold text-primary mt-8 mb-3; }
-            .article-body p { @apply text-slate-600 leading-relaxed mb-4; }
+            /* AdSense Styling */
+            .ad-container { @apply my-8 mx-auto text-center w-full overflow-hidden max-w-4xl; }
+            .ad-label { @apply text-[10px] uppercase tracking-widest text-slate-300 font-bold mb-2 block; }
         }
     </style>
 </head>
@@ -120,7 +119,7 @@
         </a>
     </div>
 
-    <!-- SJC Introduction Modal (Ported from old version) -->
+    <!-- SJC Introduction Modal -->
     <div id="sjcIntroModal" class="hidden fixed inset-0 z-[2000] bg-black/60 backdrop-blur-md items-center justify-center p-5 [&.show]:flex">
         <div class="bg-white p-8 md:p-10 rounded-[40px] w-full max-w-[600px] animate-fade-in-up relative shadow-2xl overflow-hidden">
             <button class="absolute top-6 right-6 text-2xl font-bold text-gray-300 hover:text-gray-500 transition-colors z-20" onclick="App.toggleSjcModal(false)" aria-label="Close">&times;</button>
@@ -141,7 +140,6 @@
                         </div>
                     </a>
                 </div>
-                <!-- Start Quiz Now Button -->
                 <button onclick="App.toggleSjcModal(false); App.openQuizFile('SJC');" class="w-full py-4 bg-[#036176] text-white rounded-2xl font-bold shadow-lg shadow-cyan-900/20 hover:brightness-110 hover:-translate-y-0.5 transition-all">
                     Start Quiz Now
                 </button>
@@ -157,10 +155,22 @@
         <p class="text-[0.9em] text-slate-500 font-medium tracking-wide mt-1">Tailored MCQ Practice Exclusively for CMA Students</p>
     </header>
 
+    <!-- AdSense Top Banner (Global) -->
+    <div class="ad-container">
+        <span class="ad-label">Advertisement</span>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7792469883739877"
+             data-ad-slot="AUTO_HEADER"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
     <main id="app" class="flex-grow flex flex-col relative w-full">
         <!-- Home View -->
         <section id="view-home" class="view-section active">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <div class="choice-card card-foundation group" onclick="App.navigateTo('view-foundation')">
                     <i class="fas fa-seedling text-4xl text-emerald-500 mb-4 block group-hover:scale-110 transition-transform"></i>
                     <h2 class="text-2xl font-bold text-gray-800">Foundation</h2>
@@ -176,6 +186,17 @@
                     <h2 class="text-2xl font-bold text-gray-800">Final</h2>
                     <p class="text-gray-400 text-sm mt-1">Level 3 | Papers 13 - 20</p>
                 </div>
+            </div>
+
+            <!-- AdSense In-View (Home) -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-7792469883739877"
+                     data-ad-slot="HOME_IN_FEED"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </section>
 
@@ -220,7 +241,6 @@
                     <div class="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0 text-2xl text-amber-500"><i class="fas fa-file-invoice"></i></div>
                     <div><h3 class="font-bold text-lg text-slate-700">Exam Papers</h3><p class="text-xs text-slate-400">Previous Year Questions</p></div>
                 </div>
-                <!-- SJC Custom Quiz Card - Triggers Modal -->
                 <div id="cardSjc" class="subject-card mode-sjc flex items-center gap-5 text-left p-6 hidden cursor-pointer" onclick="App.toggleSjcModal(true)">
                     <div class="w-14 h-14 rounded-2xl bg-[#036176] text-white font-bold flex items-center justify-center shrink-0 shadow-inner">SJC</div>
                     <div><h3 class="font-bold text-lg text-slate-700">Chapter wise Quiz</h3><p class="text-[10px] text-slate-400 font-bold">by Satish Jalan Sir</p></div>
@@ -228,34 +248,35 @@
             </div>
         </section>
 
-        <!-- Other views (About, Privacy, Terms) kept same -->
+        <!-- Static Content Views -->
         <section id="view-about" class="view-section">
             <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-xl max-w-4xl mx-auto article-body">
+            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-xl max-w-4xl mx-auto">
                 <h2 class="text-3xl font-extrabold mb-8 text-primary flex items-center gap-3">📚 About Prepogy</h2>
-                <div class="space-y-6 text-slate-700">
+                <div class="space-y-6 text-slate-700 leading-relaxed">
                     <p class="text-lg font-medium">My motivation for creating this website is to provide CMA students with an easy and effective way to prepare for their exams. 🎯</p>
+                    <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-primary italic">
+                        "The idea sparked back in 2019... providing instant learning through MCQ practice."
+                    </div>
                 </div>
             </div>
         </section>
-        
-        <section id="view-privacy" class="view-section">
-            <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-lg max-w-4xl mx-auto article-body">
-                <h2 class="text-2xl font-bold mb-6 text-emerald-600">🛡️ Privacy Policy</h2>
-            </div>
-        </section>
 
-        <section id="view-terms" class="view-section">
-            <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-lg max-w-4xl mx-auto article-body">
-                <h2 class="text-2xl font-bold mb-6 text-amber-600">📜 Terms and Conditions</h2>
-            </div>
-        </section>
     </main>
 
+    <!-- AdSense Footer Banner -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7792469883739877"
+             data-ad-slot="AUTO_FOOTER"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
     <!-- Footer -->
-    <footer class="py-10 text-center shrink-0 border-t border-slate-100 mt-20">
+    <footer class="py-10 text-center shrink-0 border-t border-slate-100 mt-10">
         <div class="flex justify-center gap-6 mb-8">
             <a href="https://whatsapp.com/channel/0029Vb77tFDKQuJFr4fbCE3c" target="_blank" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center transition-all hover:-translate-y-1 hover:bg-[#25D366] group" aria-label="Join WhatsApp Channel">
                 <i class="fab fa-whatsapp text-xl text-slate-400 group-hover:text-white"></i>
@@ -264,12 +285,12 @@
                 <i class="fab fa-instagram text-xl text-slate-400 group-hover:text-white"></i>
             </a>
         </div>
-        <div class="flex flex-wrap justify-center gap-6 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <a href="#" class="cursor-pointer hover:text-primary transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-home')">Home</a>
-            <a href="blog.html" class="cursor-pointer hover:text-indigo-600 transition-colors no-underline text-slate-400">Blog</a>
-            <a href="#" class="cursor-pointer hover:text-primary transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-about')">About</a>
-            <a href="#" class="cursor-pointer hover:text-emerald-500 transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-privacy')">Privacy</a>
-            <a href="#" class="cursor-pointer hover:text-amber-600 transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-terms')">Terms</a>
+        <div class="flex flex-wrap justify-center gap-6 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400 px-4">
+            <a href="#" class="hover:text-primary transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-home')">Home</a>
+            <a href="blog.html" class="hover:text-indigo-600 transition-colors no-underline text-slate-400">Blog</a>
+            <a href="#" class="hover:text-primary transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-about')">About</a>
+            <a href="#" class="hover:text-emerald-500 transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-privacy')">Privacy</a>
+            <a href="#" class="hover:text-amber-600 transition-colors no-underline text-slate-400" onclick="event.preventDefault(); App.navigateTo('view-terms')">Terms</a>
         </div>
         <p class="text-slate-400 text-xs font-bold mb-2">Prepogy © 2025</p>
         <p class="text-sm font-bold text-emerald-500 mt-4 flex items-center justify-center gap-2">
@@ -329,6 +350,8 @@
                     next.classList.add('active');
                     this.currentViewId = viewId;
                     window.scrollTo(0,0);
+                    // Refresh Ads on view change if possible
+                    if (window.adsbygoogle) { (adsbygoogle = window.adsbygoogle || []).push({}); }
                 }
             },
 
@@ -365,7 +388,6 @@
                 this.navigateTo('view-dashboard', { id, title });
             },
 
-            // SJC Modal Toggle Logic
             toggleSjcModal(show) {
                 const el = document.getElementById('sjcIntroModal');
                 if (show) el.classList.add('show');
