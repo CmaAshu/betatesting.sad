@@ -403,15 +403,33 @@
             initGestures();
         }
 
-        function initGestures() {
+         function initGestures() {
             const area = document.getElementById('questionArea');
-            area.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+            area.addEventListener('touchstart', (e) => { 
+                // Only track start if single finger and NOT zoomed in
+                if (e.touches.length === 1 && (!window.visualViewport || window.visualViewport.scale === 1)) {
+                    touchStartX = e.changedTouches[0].clientX; 
+                } else {
+                    touchStartX = null; 
+                }
+            }, { passive: true });
+            
             area.addEventListener('touchend', (e) => {
+                if (touchStartX === null) return;
+                
+                // Prevent navigation if the user is currently zoomed in (likely panning)
+                if (window.visualViewport && window.visualViewport.scale > 1) {
+                    touchStartX = null;
+                    return;
+                }
+
                 const diffX = touchStartX - e.changedTouches[0].clientX;
+                // Threshold of 60px sensitivity
                 if (Math.abs(diffX) > 60) { 
                     if (diffX > 0) changeQuestion(1); 
                     else changeQuestion(-1); 
                 }
+                touchStartX = null;
             }, { passive: true });
         }
 
@@ -590,4 +608,5 @@
         window.onload = initQuiz;
     </script>
 </body>
+
 </html>
