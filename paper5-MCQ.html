@@ -1,20 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="scrollbar-gutter-stable">
+<html lang="en" class="scrollbar-gutter-stable" data-theme="light">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-FLGRHV6077"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-FLGRHV6077');
-</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#6366f1">
     
-    <title>Prepogy Quiz Loader - CMA Practice</title>
+    <title>Prepogy Quiz Loader - Enhanced Experience</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,40 +14,43 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Link to your External Question Database -->
+    <!-- Link to external Question Database -->
     <script src="bm5.js"></script>
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Poppins', 'sans-serif'] },
                     colors: {
                         primary: { DEFAULT: '#6366f1', dark: '#4f46e5' },
-                        success: '#10b981', error: '#ef4444', surface: '#ffffff',
+                        success: '#10b981', 
+                        error: '#ef4444', 
+                        surface: 'var(--color-surface)',
                     },
                     boxShadow: {
                         soft: '0 10px 40px -10px rgba(0,0,0,0.06)',
                         hover: '0 20px 40px -5px rgba(99, 102, 241, 0.12)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
                     },
                     animation: {
                         'rise': 'rise 20s linear infinite',
                         'floating': 'floating 4s ease-in-out infinite',
-                        'fade-in-up': 'fadeInUp 0.3s ease forwards',
+                        'fade-in-up': 'fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-in': 'slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pop': 'pop 0.3s ease-out forwards',
                         'rotate-border': 'rotate-border 3s linear infinite',
                         'confetti-fall': 'confetti-fall 3s linear forwards',
-                        'glow-purple': 'glow-purple 2.5s ease-in-out infinite',
                     },
                     keyframes: {
-                        rise: { 'from': { transform: 'translateY(0) rotate(0deg)', opacity: '0.4' }, 'to': { transform: 'translateY(-120vh) rotate(360deg)', opacity: '0' } },
+                        rise: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.8' }, '80%': { opacity: '0.4' }, '100%': { transform: 'translateY(-125vh) rotate(360deg)', opacity: '0' } },
                         floating: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-12px)' } },
-                        fadeInUp: { 'from': { opacity: '0', transform: 'translateY(10px)' }, 'to': { opacity: '1', transform: 'translateY(0)' } },
+                        fadeInUp: { 'from': { opacity: '0', transform: 'translateY(20px)' }, 'to': { opacity: '1', transform: 'translateY(0)' } },
+                        slideIn: { 'from': { opacity: '0', transform: 'translateX(30px)' }, 'to': { opacity: '1', transform: 'translateX(0)' } },
+                        pop: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.03)' }, '100%': { transform: 'scale(1)' } },
                         'rotate-border': { 'from': { transform: 'rotate(0deg)' }, 'to': { transform: 'rotate(360deg)' } },
-                        'confetti-fall': { '0%': { transform: 'translateY(-100px) rotateZ(0deg)', opacity: '1' }, '100%': { transform: 'translateY(100vh) rotateZ(360deg)', opacity: '0' } },
-                        'glow-purple': {
-                            '0%, 100%': { color: '#B201E3', textShadow: '0 0 8px rgba(178, 1, 227, 0.4)' },
-                            '50%': { color: '#5C01E3', textShadow: '0 0 12px rgba(92, 1, 227, 0.6)' }
-                        }
+                        'confetti-fall': { '0%': { transform: 'translateY(-20px) rotate(0deg)', opacity: '1' }, '100%': { transform: 'translateY(100vh) rotate(720deg)', opacity: '0' } },
                     }
                 }
             }
@@ -64,126 +58,190 @@
     </script>
 
     <style type="text/tailwindcss">
+        :root {
+            --color-bg: #f8fafc;
+            --color-surface: #ffffff;
+            --color-text-main: #1e293b;
+            --color-text-muted: #64748b;
+            --color-border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --color-bg: #0f172a;
+            --color-surface: #1e293b;
+            --color-text-main: #f1f5f9;
+            --color-text-muted: #94a3b8;
+            --color-border: #334155;
+        }
+
+        [data-theme="sepia"] {
+            --color-bg: #fdf6e3;
+            --color-surface: #f5eacf;
+            --color-text-main: #586e75;
+            --color-text-muted: #839496;
+            --color-border: #ddd6c1;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
         @layer utilities {
-            .text-gradient-original { @apply bg-clip-text text-transparent bg-[linear-gradient(135deg,#10b981,#6366f1,#db2777,#f59e0b)]; }
             .google-g-text {
                 background: conic-gradient(#4285f4 0deg 90deg, #34a853 90deg 180deg, #fbbc05 180deg 270deg, #ea4335 270deg 360deg);
                 -webkit-background-clip: text; -webkit-text-fill-color: transparent; @apply font-black;
             }
         }
+
         @layer components {
             .option {
-                @apply flex items-center p-4 md:p-5 mb-3 bg-white border border-slate-200 rounded-2xl 
-                       cursor-pointer transition-all duration-200 hover:scale-[1.015] hover:translate-x-1 hover:bg-violet-50 hover:shadow-hover hover:border-primary;
+                @apply flex items-center p-4 md:p-6 mb-4 rounded-2xl border cursor-pointer transition-all duration-300;
+                background-color: var(--color-surface);
+                border-color: var(--color-border);
             }
-            .option.disabled { @apply pointer-events-none; }
-            .option.correct { @apply border-success bg-emerald-50; }
-            .option.incorrect { @apply border-error bg-red-50; }
-            .shape { @apply absolute bottom-[-150px] opacity-15 font-bold block will-change-transform animate-rise; line-height: 1; }
-            .confetti-particle { @apply fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999] animate-confetti-fall; }
-            
-            /* Soothing Home Button Styles */
+            .option:not(.disabled):hover {
+                @apply shadow-hover -translate-y-1;
+                border-color: #6366f1;
+            }
+            .option.disabled { @apply cursor-default opacity-80; }
+            .option.correct { 
+                @apply border-success ring-2 ring-success/20; 
+                background-color: rgba(16, 185, 129, 0.1);
+            }
+            .option.incorrect { 
+                @apply border-error ring-2 ring-error/20;
+                background-color: rgba(239, 68, 68, 0.1);
+            }
             .btn-home {
-                @apply bg-white border border-slate-200 px-5 py-2.5 rounded-full shadow-sm text-slate-500 font-bold text-xs 
-                       transition-all duration-300 flex items-center gap-2 hover:bg-indigo-50 hover:text-primary 
-                       hover:border-primary/30 hover:shadow-md active:scale-95;
+                @apply px-5 py-2.5 rounded-full shadow-sm font-bold text-xs transition-all duration-300 flex items-center gap-2 active:scale-95;
+                background-color: var(--color-surface);
+                border: 1px solid var(--color-border);
+                color: var(--color-text-muted);
             }
-
+            .btn-home:hover {
+                @apply shadow-md text-primary;
+                border-color: #6366f1;
+            }
+            .theme-btn {
+                @apply w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200;
+                background-color: var(--color-surface);
+                border: 1px solid var(--color-border);
+            }
+            .theme-btn.active {
+                @apply border-primary text-primary ring-2 ring-primary/20;
+            }
+            .confetti-particle { @apply fixed top-[-20px] pointer-events-none z-[9999] animate-confetti-fall; }
+            
             .share-btn {
                 @apply flex items-center justify-center gap-2 py-4 px-6 rounded-2xl font-bold text-sm text-white shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95;
             }
         }
     </style>
 </head>
-<body class="font-sans bg-slate-50 text-gray-800 overflow-x-hidden antialiased min-h-screen flex flex-col">
+<body class="font-sans overflow-x-hidden antialiased min-h-screen flex flex-col">
 
     <!-- Background Shapes -->
-    <div class="fixed inset-0 w-full h-full pointer-events-none -z-10 overflow-hidden select-none">
-        <div class="shape left-[10%] text-[55px] text-emerald-500" style="animation-duration: 22s;">₹</div>
-        <div class="shape left-[50%] text-[55px] text-amber-500" style="animation-duration: 20s;">$</div>
-        <div class="shape left-[80%] text-[65px] text-indigo-500" style="animation-duration: 28s;">×</div>
-        <div class="shape left-[30%] text-[45px] text-rose-500" style="animation-duration: 25s;">€</div>
+    <div class="fixed inset-0 w-full h-full pointer-events-none -z-10 overflow-hidden select-none opacity-40">
+        <div class="absolute bottom-[-150px] left-[5%] text-[55px] text-emerald-500 animate-rise" style="animation-duration: 22s;">₹</div>
+        <div class="absolute bottom-[-150px] left-[15%] text-[45px] text-rose-500 animate-rise" style="animation-duration: 25s;">€</div>
+        <div class="absolute bottom-[-150px] left-[25%] text-[60px] text-blue-500 animate-rise" style="animation-duration: 18s;">£</div>
+        <div class="absolute bottom-[-150px] left-[40%] text-[50px] text-amber-500 animate-rise" style="animation-duration: 20s;">$</div>
+        <div class="absolute bottom-[-150px] left-[55%] text-[55px] text-indigo-500 animate-rise" style="animation-duration: 28s;">¥</div>
+        <div class="absolute bottom-[-150px] left-[70%] text-[40px] text-cyan-500 animate-rise" style="animation-duration: 24s;">฿</div>
+        <div class="absolute bottom-[-150px] left-[85%] text-[65px] text-purple-500 animate-rise" style="animation-duration: 30s;">₩</div>
+        <div class="absolute bottom-[-150px] left-[95%] text-[45px] text-orange-500 animate-rise" style="animation-duration: 21s;">₫</div>
     </div>
 
-    <!-- Header -->
-    <header class="text-center py-10 md:py-16 px-5 relative shrink-0">
-        <div class="w-24 h-24 md:w-36 md:h-36 mx-auto mb-5 cursor-pointer transition-all duration-300 hover:scale-110 flex items-center justify-center animate-floating" onclick="location.href='index.html'">
-            <img src="prep.png" alt="Prepogy Logo" class="w-full h-auto object-contain" onerror="this.src='https://via.placeholder.com/80?text=Logo'">
+    <!-- Header & Theme Switcher -->
+    <header class="pt-8 pb-4 px-5 relative shrink-0">
+        <div class="max-w-4xl mx-auto flex flex-col items-center">
+            <div class="w-20 h-20 md:w-28 md:h-28 mx-auto mb-4 cursor-pointer transition-transform hover:scale-110 animate-floating" onclick="location.href='index.html'">
+                <img src="prep.png" alt="Prepogy Logo" class="w-full h-auto object-contain" onerror="this.src='https://via.placeholder.com/80?text=Logo'">
+            </div>
+            
+            <div class="flex items-center gap-2 bg-black/5 p-1.5 rounded-2xl backdrop-blur-sm mb-4">
+                <button onclick="setTheme('light')" id="theme-light" class="theme-btn" title="Light Mode">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <button onclick="setTheme('dark')" id="theme-dark" class="theme-btn" title="Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button onclick="setTheme('sepia')" id="theme-sepia" class="theme-btn" title="Sepia Mode">
+                    <i class="fas fa-coffee"></i>
+                </button>
+            </div>
         </div>
-        <h1 class="text-[clamp(2rem,6vw,3.5rem)] font-extrabold uppercase tracking-[2px] text-gradient-original mb-1">Prepogy</h1>
-        <p class="text-[0.9em] text-slate-500 font-medium tracking-wide mt-1">Question Bank practice</p>
     </header>
 
-    <main class="flex-grow flex flex-col max-w-2xl mx-auto px-5 w-full">
-        <!-- Top Nav & Selector -->
+    <main class="flex-grow flex flex-col max-w-2xl mx-auto px-4 md:px-5 w-full">
+        <!-- Top Nav -->
         <div id="quizHeader" class="flex justify-between items-center mb-6">
             <button class="btn-home" onclick="location.href='index.html'">
-                <i class="fas fa-home"></i> Home
+                <i class="fas fa-home"></i> <span class="hidden sm:inline">Home</span>
             </button>
-            <div class="flex items-center gap-3">
-                <button onclick="location.reload()" class="text-[10px] text-red-400 font-bold uppercase tracking-wide">Reset</button>
-                <select id="setSelector" class="max-w-[140px] md:max-w-[220px] bg-white rounded-xl px-4 py-2 text-xs font-bold border border-slate-200 shadow-sm outline-none focus:border-primary text-slate-600 cursor-pointer truncate">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="location.reload()" class="text-[10px] text-red-500 font-bold uppercase tracking-wide px-2 py-1">Reset</button>
+                <select id="setSelector" class="max-w-[120px] sm:max-w-[200px] rounded-xl px-3 py-2 text-xs font-bold border outline-none focus:border-primary cursor-pointer truncate" style="background-color: var(--color-surface); border-color: var(--color-border);">
                 </select>
             </div>
         </div>
 
         <!-- Score Dashboard -->
-        <div id="statsBar" class="bg-white rounded-3xl p-4 flex shadow-sm mb-8 border border-slate-100 divide-x divide-slate-100 animate-fade-in-up">
+        <div id="statsBar" class="bg-surface rounded-3xl p-5 flex shadow-soft mb-8 border border-slate-100/50 divide-x divide-slate-100/10 animate-fade-in-up">
             <div class="flex-1 text-center">
-                <span class="block text-xl md:text-2xl font-extrabold text-emerald-500 mb-1" id="scoreCorrect">0</span>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Correct</span>
+                <span class="block text-2xl font-extrabold text-success mb-1" id="scoreCorrect">0</span>
+                <span class="text-[9px] font-bold opacity-60 uppercase tracking-widest">Correct</span>
             </div>
             <div class="flex-1 text-center">
-                <span class="block text-xl md:text-2xl font-extrabold text-red-500 mb-1" id="scoreWrong">0</span>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Wrong</span>
+                <span class="block text-2xl font-extrabold text-error mb-1" id="scoreWrong">0</span>
+                <span class="text-[9px] font-bold opacity-60 uppercase tracking-widest">Wrong</span>
             </div>
             <div class="flex-1 text-center">
-                <span class="block text-xl md:text-2xl font-extrabold text-primary mb-1" id="scoreAcc">0%</span>
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Accuracy</span>
+                <span class="block text-2xl font-extrabold text-primary mb-1" id="scoreAcc">0%</span>
+                <span class="text-[9px] font-bold opacity-60 uppercase tracking-widest">Accuracy</span>
             </div>
         </div>
 
         <!-- Quiz Container -->
-        <div id="questionArea" class="bg-white/95 backdrop-blur-md shadow-soft rounded-[28px] p-6 md:p-10 relative overflow-hidden transition-all duration-300 animate-fade-in-up">
-            <i class="fas fa-pen-nib absolute -bottom-6 -right-6 text-[14rem] text-primary opacity-[0.03] -rotate-12 pointer-events-none"></i>
+        <div id="questionArea" class="bg-surface backdrop-blur-md shadow-soft rounded-[2.5rem] p-6 md:p-10 relative overflow-hidden transition-all duration-300 animate-fade-in-up">
+            <i class="fas fa-puzzle-piece absolute -bottom-8 -right-8 text-[12rem] text-primary opacity-[0.03] -rotate-12 pointer-events-none"></i>
             
-            <p id="qIndexDisplay" class="text-[10px] font-bold text-primary uppercase mb-4 relative z-10 tracking-widest"></p>
-            <h2 id="qTextDisplay" class="text-lg md:text-xl font-bold text-gray-800 mb-8 leading-relaxed relative z-10">Loading questions...</h2>
-            
-            <div id="optionsContainer" class="space-y-3 relative z-10"></div>
+            <div id="questionContent" class="animate-slide-in">
+                <p id="qIndexDisplay" class="text-[11px] font-bold text-primary uppercase mb-5 tracking-[0.2em]"></p>
+                <h2 id="qTextDisplay" class="text-xl md:text-2xl font-bold mb-8 leading-tight">Loading...</h2>
+                
+                <div id="optionsContainer" class="space-y-4"></div>
 
-            <div id="explanationContainer" class="relative z-10 mt-6 p-5 bg-slate-50 rounded-2xl border-l-4 border-primary hidden animate-fade-in-up">
-                <div class="flex justify-between items-center mb-3">
-                    <h4 class="text-xs font-bold uppercase text-primary tracking-wide">Explanation</h4>
-                    <button onclick="openGoogleSearch()" class="relative p-[1.5px] rounded-full overflow-hidden inline-flex items-center justify-center cursor-pointer transition-transform hover:scale-105 group border-none bg-transparent">
-                        <div class="absolute inset-0 bg-[conic-gradient(from_0deg,#4285f4,#34a853,#fbbc05,#ea4335,#4285f4)] animate-rotate-border"></div>
-                        <div class="relative bg-white px-3 py-1.5 rounded-full flex items-center gap-1.5 z-10">
-                            <i class="fas fa-magnifying-glass-chart text-primary text-xs"></i>
-                            <span class="font-bold text-[10px] text-slate-600">ASK GURU <span class="google-g-text">G</span></span>
-                        </div>
-                    </button>
+                <div id="explanationContainer" class="mt-8 p-6 bg-black/5 rounded-3xl border-l-4 border-primary hidden animate-fade-in-up">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-xs font-bold uppercase text-primary tracking-wide">Explanation</h4>
+                        <!-- RESTORED: Ask Guruji Button -->
+                        <button onclick="openGoogleSearch()" class="relative p-[1.5px] rounded-full overflow-hidden inline-flex items-center justify-center cursor-pointer transition-transform hover:scale-105 group border-none bg-transparent">
+                            <div class="absolute inset-0 bg-[conic-gradient(from_0deg,#4285f4,#34a853,#fbbc05,#ea4335,#4285f4)] animate-rotate-border"></div>
+                            <div class="relative bg-white px-3 py-1.5 rounded-full flex items-center gap-1.5 z-10">
+                                <i class="fas fa-magnifying-glass-chart text-primary text-xs"></i>
+                                <span class="font-bold text-[10px] text-slate-600">ASK GURU <span class="google-g-text">G</span></span>
+                            </div>
+                        </button>
+                    </div>
+                    <p id="explanationText" class="text-sm opacity-80 leading-relaxed italic"></p>
                 </div>
-                <p id="explanationText" class="text-sm text-slate-600 leading-relaxed"></p>
             </div>
 
-            <!-- Swipe Guide -->
-            <div class="md:hidden flex justify-center items-center gap-2 text-[8px] font-bold uppercase tracking-[0.2em] mt-8 pt-4 border-t border-slate-100 animate-glow-purple relative z-10">
-                <i class="fas fa-left-right"></i>
-                <span>Swipe to navigate</span>
-            </div>
-
-            <div class="flex justify-between mt-6 md:mt-10 pt-6 relative z-10">
-                <button id="btnPrevQ" class="px-6 py-3 rounded-2xl font-bold transition-all flex items-center gap-2 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 disabled:opacity-0" onclick="changeQuestion(-1)">
-                    <i class="fas fa-arrow-left"></i> Previous
+            <div class="flex justify-between mt-10 pt-8 border-t border-black/5">
+                <button id="btnPrevQ" class="px-7 py-3.5 rounded-2xl font-bold transition-all flex items-center gap-2 bg-black/5 hover:bg-black/10 disabled:opacity-0 active:scale-95" onclick="changeQuestion(-1)">
+                    <i class="fas fa-chevron-left"></i> Prev
                 </button>
-                <button id="btnNextQ" class="px-6 py-3 rounded-2xl font-bold transition-all flex items-center gap-2 bg-primary text-white shadow-lg shadow-indigo-200" onclick="changeQuestion(1)">
-                    Next <i class="fas fa-arrow-right"></i>
+                <button id="btnNextQ" class="px-7 py-3.5 rounded-2xl font-bold transition-all flex items-center gap-2 bg-primary text-white shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 active:scale-95" onclick="changeQuestion(1)">
+                    Next <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Completion Page (Refined) -->
-        <div id="resultsArea" class="hidden bg-white rounded-[32px] p-8 md:p-12 text-center shadow-2xl animate-fade-in-up border border-slate-100 relative overflow-hidden">
+        <!-- RESTORED: Completion Page (Results Area) -->
+        <div id="resultsArea" class="hidden bg-surface rounded-[32px] p-8 md:p-12 text-center shadow-2xl animate-fade-in-up border border-slate-100/10 relative overflow-hidden">
             <!-- Background Decorative Element -->
             <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-50 rounded-full opacity-50"></div>
             
@@ -196,23 +254,23 @@
                 <div id="finalScoreDisplay" class="inline-block bg-indigo-50 text-primary px-6 py-2 rounded-full font-extrabold text-sm mb-8 tracking-wide"></div>
                 
                 <!-- Community Support Section -->
-                <div class="mb-8 p-6 bg-slate-50 rounded-[28px] border border-slate-100">
+                <div class="mb-8 p-6 bg-black/5 rounded-[28px] border border-black/5">
                     <div class="flex items-center justify-center gap-2 mb-3">
                         <i class="fas fa-heart text-rose-500 animate-pulse text-sm"></i>
-                        <h4 class="text-xs font-bold uppercase tracking-widest text-slate-500">Support our Community</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-widest opacity-50">Support our Community</h4>
                     </div>
-                    <p class="text-sm font-medium text-slate-600 leading-relaxed mb-6">
+                    <p class="text-sm font-medium opacity-80 leading-relaxed mb-6">
                         "Your contribution helps us keep this platform free and updated for every CMA aspirant. If you found this helpful, kindly share it with your study groups."
                     </p>
                     
                     <!-- Performance Quote Bubble -->
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-primary text-left relative">
+                    <div class="bg-surface p-6 rounded-2xl shadow-sm border-l-4 border-primary text-left relative">
                         <i class="fas fa-quote-left absolute top-4 left-4 text-primary opacity-10 text-xl"></i>
                         <p id="quoteDisplay" class="text-sm font-bold text-indigo-900 leading-relaxed italic relative z-10"></p>
                     </div>
                 </div>
 
-                <!-- Redesigned Share Grid -->
+                <!-- Redesigned Share Grid (Original Buttons) -->
                 <div class="grid grid-cols-2 gap-4 mb-8">
                     <button onclick="shareToWhatsApp()" class="share-btn bg-gradient-to-r from-emerald-500 to-green-600 shadow-emerald-100">
                         <i class="fab fa-whatsapp text-lg"></i> WhatsApp
@@ -226,11 +284,11 @@
                 </div>
 
                 <!-- Footer Actions -->
-                <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-100">
+                <div class="grid grid-cols-2 gap-4 pt-6 border-t border-black/5">
                     <button onclick="location.reload()" class="py-4 rounded-2xl font-bold text-sm bg-primary text-white shadow-lg shadow-indigo-100 hover:bg-primary-dark transition-all">
                         Try Again
                     </button>
-                    <button onclick="location.href='index.html'" class="py-4 rounded-2xl font-bold text-sm bg-slate-100 text-slate-500 hover:bg-slate-200 transition-all">
+                    <button onclick="location.href='index.html'" class="py-4 rounded-2xl font-bold text-sm bg-black/5 text-slate-500 hover:bg-black/10 transition-all">
                         Main Menu
                     </button>
                 </div>
@@ -242,8 +300,8 @@
         </div>
     </main>
 
-    <footer class="py-10 text-center shrink-0 border-t border-slate-100 mt-20">
-        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Prepogy © 2025</p>
+    <footer class="py-12 text-center opacity-40">
+        <p class="text-[10px] font-black uppercase tracking-[0.5em]">Prepogy © 2025</p>
     </footer>
 
     <script>
@@ -252,7 +310,7 @@
         let score = { c: 0, w: 0 };
         let userAnswers = [];
         let questionsAttempted = [];
-        let touchStartX = 0; // State for swipe gestures
+        let touchStartX = 0;
 
         const qIndexEl = document.getElementById('qIndexDisplay');
         const qTextEl = document.getElementById('qTextDisplay');
@@ -262,6 +320,7 @@
         const setSelector = document.getElementById('setSelector');
         const explanationBox = document.getElementById('explanationContainer');
         const explanationText = document.getElementById('explanationText');
+        const questionContent = document.getElementById('questionContent');
 
         const performanceQuotes = [
             "⚠️ Help us stay online! Share this link with just one friend today to keep our servers running.",
@@ -273,7 +332,17 @@
             "🏰 Strong communities share resources. Post this link and strengthen our network."
         ];
 
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`theme-${theme}`).classList.add('active');
+            localStorage.setItem('quiz-theme', theme);
+        }
+
         function initQuiz() {
+            const savedTheme = localStorage.getItem('quiz-theme') || 'light';
+            setTheme(savedTheme);
+
             if (typeof quizSets === 'undefined') {
                 qTextEl.textContent = "Error: Database not found.";
                 return;
@@ -284,17 +353,12 @@
             initGestures();
         }
 
-        // Exact Swipe Gesture Implementation from original version
         function initGestures() {
             const area = document.getElementById('questionArea');
-            area.addEventListener('touchstart', (e) => { 
-                touchStartX = e.changedTouches[0].clientX; 
-            }, { passive: true });
-            
+            area.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
             area.addEventListener('touchend', (e) => {
                 const diffX = touchStartX - e.changedTouches[0].clientX;
-                // Threshold of 50px sensitivity
-                if (Math.abs(diffX) > 50) { 
+                if (Math.abs(diffX) > 60) { 
                     if (diffX > 0) changeQuestion(1); 
                     else changeQuestion(-1); 
                 }
@@ -308,10 +372,12 @@
             const questions = quizSets[currentSetIdx].questions;
             userAnswers = new Array(questions.length).fill(null);
             questionsAttempted = new Array(questions.length).fill(false);
+            
             document.getElementById('resultsArea').classList.add('hidden');
             document.getElementById('questionArea').classList.remove('hidden');
             document.getElementById('statsBar').classList.remove('hidden');
             document.getElementById('quizHeader').classList.remove('hidden');
+            
             updateStats();
             renderQuestion();
         }
@@ -319,40 +385,61 @@
         function renderQuestion() {
             const set = quizSets[currentSetIdx].questions;
             const q = set[currentQIdx];
-            qIndexEl.textContent = `Question ${currentQIdx + 1} / ${set.length}`;
+            
+            qIndexEl.textContent = `Progress • ${currentQIdx + 1} of ${set.length}`;
             qTextEl.textContent = q.q;
             optionsEl.innerHTML = '';
+            
             q.o.forEach((opt, i) => {
                 const div = document.createElement('div');
                 div.className = 'option';
+                
                 if (questionsAttempted[currentQIdx]) {
                     div.classList.add('disabled');
                     if (opt === q.c) div.classList.add('correct');
                     if (userAnswers[currentQIdx] === opt && opt !== q.c) div.classList.add('incorrect');
                 } else {
-                    div.onclick = () => handleAnswer(opt);
+                    div.onclick = () => handleAnswer(opt, div);
                 }
-                div.innerHTML = `<span class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center font-bold mr-4 shrink-0 text-slate-600 transition-colors">${String.fromCharCode(65 + i)}</span><span class="text-sm font-medium text-slate-700">${opt}</span>`;
+                
+                div.innerHTML = `
+                    <span class="w-10 h-10 rounded-xl bg-black/5 flex items-center justify-center font-bold mr-5 shrink-0 transition-colors">
+                        ${String.fromCharCode(65 + i)}
+                    </span>
+                    <span class="text-[15px] font-semibold opacity-90">${opt}</span>
+                `;
                 optionsEl.appendChild(div);
             });
+
             if (questionsAttempted[currentQIdx]) {
                 explanationBox.classList.remove('hidden');
-                explanationText.textContent = "Refer to Official CMA Study Material.";
+                explanationText.textContent = "Reference: Official CMA Study Material.";
             } else {
                 explanationBox.classList.add('hidden');
             }
+
             prevBtn.style.visibility = (currentQIdx === 0) ? 'hidden' : 'visible';
-            nextBtn.innerHTML = (currentQIdx === set.length - 1) ? 'Finish' : 'Next <i class="fas fa-arrow-right"></i>';
+            nextBtn.innerHTML = (currentQIdx === set.length - 1) ? 'Show Results' : 'Next Question <i class="fas fa-chevron-right ml-1"></i>';
         }
 
-        function handleAnswer(selected) {
+        function handleAnswer(selected, element) {
             if (questionsAttempted[currentQIdx]) return;
+            
             const correct = quizSets[currentSetIdx].questions[currentQIdx].c;
             questionsAttempted[currentQIdx] = true;
             userAnswers[currentQIdx] = selected;
-            if (selected === correct) score.c++; else score.w++;
+            
+            element.classList.add('animate-pop');
+
+            if (selected === correct) {
+                score.c++;
+                createConfetti(15); 
+            } else {
+                score.w++;
+            }
+            
             updateStats();
-            renderQuestion();
+            setTimeout(renderQuestion, 200);
         }
 
         function updateStats() {
@@ -366,29 +453,30 @@
         function changeQuestion(dir) {
             const set = quizSets[currentSetIdx].questions;
             const next = currentQIdx + dir;
+            
             if (next >= 0 && next < set.length) {
-                const area = document.getElementById('questionArea');
-                area.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => { 
-                    currentQIdx = next; 
-                    renderQuestion(); 
-                    area.classList.remove('opacity-0', 'scale-95'); 
-                }, 150);
+                questionContent.classList.remove('animate-slide-in');
+                void questionContent.offsetWidth; 
+                questionContent.classList.add('animate-slide-in');
+                
+                currentQIdx = next; 
+                renderQuestion(); 
             } else if (next >= set.length) {
                 showResults();
             }
         }
 
-        function createConfetti() {
+        function createConfetti(count = 60) {
             const colors = ['#6366f1', '#10b981', '#f59e0b', '#db2777', '#0ea5e9'];
-            for (let i = 0; i < 80; i++) {
+            for (let i = 0; i < count; i++) {
                 const p = document.createElement('div');
                 p.className = 'confetti-particle';
                 p.style.left = Math.random() * 100 + 'vw';
                 p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                p.style.animationDelay = Math.random() * 2 + 's';
-                p.style.width = Math.random() * 10 + 5 + 'px';
+                p.style.animationDelay = Math.random() * 0.5 + 's';
+                p.style.width = Math.random() * 8 + 4 + 'px';
                 p.style.height = p.style.width;
+                p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 3000);
             }
@@ -398,6 +486,7 @@
             document.getElementById('questionArea').classList.add('hidden');
             document.getElementById('statsBar').classList.add('hidden');
             document.getElementById('quizHeader').classList.add('hidden');
+            
             const res = document.getElementById('resultsArea');
             res.classList.remove('hidden');
             
@@ -407,7 +496,7 @@
             const quote = performanceQuotes[Math.floor(Math.random() * performanceQuotes.length)];
             document.getElementById('quoteDisplay').textContent = quote;
 
-            createConfetti();
+            createConfetti(100);
         }
 
         function shareToWhatsApp() {
@@ -462,4 +551,3 @@
     </script>
 </body>
 </html>
-
