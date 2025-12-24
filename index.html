@@ -102,9 +102,13 @@
             .mode-sjc { background-image: linear-gradient(white, white), linear-gradient(135deg, #036176, #024a5a); }
             .shape { @apply absolute bottom-[-150px] opacity-15 font-bold block will-change-transform animate-rise; line-height: 1; }
             
-            /* AdSense Styling */
-            .ad-container { @apply my-8 mx-auto text-center w-full overflow-hidden max-w-4xl; }
-            .ad-label { @apply text-[10px] uppercase tracking-widest text-slate-300 font-bold mb-2 block; }
+            /* Clean AdSense Container - No visible labels */
+            .ad-container { @apply my-6 mx-auto text-center w-full overflow-hidden max-w-4xl min-h-[50px]; }
+
+            /* Restoration Article Styling */
+            .article-body h2 { @apply text-xl md:text-2xl font-black text-slate-800 mt-10 mb-5 flex items-center gap-2; }
+            .article-body h3 { @apply text-lg font-bold text-primary mt-8 mb-3; }
+            .article-body p { @apply text-slate-600 leading-relaxed mb-4 text-sm md:text-base; }
         }
     </style>
 </head>
@@ -164,9 +168,8 @@
         <p class="text-[0.9em] text-slate-500 font-medium tracking-wide mt-1">Tailored MCQ Practice Exclusively for CMA Students</p>
     </header>
 
-    <!-- AdSense Top Banner (Global) -->
+    <!-- AdSense Top Banner slot - Neutral Placeholder -->
     <div class="ad-container">
-        <span class="ad-label">Advertisement</span>
         <ins class="adsbygoogle"
              style="display:block"
              data-ad-client="ca-pub-7792469883739877"
@@ -177,9 +180,9 @@
     </div>
 
     <main id="app" class="flex-grow flex flex-col relative w-full">
-        <!-- Home View -->
+        <!-- SPA VIEWS -->
         <section id="view-home" class="view-section active">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="choice-card card-foundation group" onclick="App.navigateTo('view-foundation')">
                     <i class="fas fa-seedling text-4xl text-emerald-500 mb-4 block group-hover:scale-110 transition-transform"></i>
                     <h2 class="text-2xl font-bold text-gray-800">Foundation</h2>
@@ -195,17 +198,6 @@
                     <h2 class="text-2xl font-bold text-gray-800">Final</h2>
                     <p class="text-gray-400 text-sm mt-1">Level 3 | Papers 13 - 20</p>
                 </div>
-            </div>
-
-            <!-- AdSense In-View (Home) -->
-            <div class="ad-container">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="fluid"
-                     data-ad-layout-key="-fb+5w+4e-db+86"
-                     data-ad-client="ca-pub-7792469883739877"
-                     data-ad-slot="HOME_IN_FEED"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </section>
 
@@ -257,23 +249,70 @@
             </div>
         </section>
 
-        <!-- Static Content Views -->
+        <!-- RESTORED ABOUT SECTION -->
         <section id="view-about" class="view-section">
             <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
-            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-xl max-w-4xl mx-auto">
+            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-xl leading-relaxed max-w-4xl mx-auto">
                 <h2 class="text-3xl font-extrabold mb-8 text-primary flex items-center gap-3">📚 About Prepogy</h2>
-                <div class="space-y-6 text-slate-700 leading-relaxed">
+                <div class="space-y-6 text-slate-700 article-body">
                     <p class="text-lg font-medium">My motivation for creating this website is to provide CMA students with an easy and effective way to prepare for their exams. 🎯</p>
-                    <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-primary italic">
-                        "The idea sparked back in 2019... providing instant learning through MCQ practice."
+                    <div class="bg-indigo-50 p-6 rounded-2xl border-l-4 border-primary">
+                        <p class="italic text-slate-600 text-sm md:text-base">"The idea sparked back in 2019 while I was preparing for my driving license test—a computer-based MCQ exam at the RTO. 🚗💻 I downloaded an app, attempted all 200 questions in one go, and despite making mistakes, the instant learning process was incredibly effective. That experience inspired me to build this platform for you! 💡✨"</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                        <div class="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                            <h3 class="font-bold text-emerald-700 mb-2 flex items-center gap-2"><i class="fas fa-check-circle"></i> Authentic Content</h3>
+                            <p class="text-sm text-slate-600">All questions are sourced directly from the official <strong>CMA Institute MCQ bank</strong>.</p>
+                        </div>
+                        <div class="p-6 bg-blue-50 rounded-2xl border border-blue-100">
+                            <h3 class="font-bold text-blue-700 mb-2 flex items-center gap-2"><i class="fas fa-rocket"></i> Targeted Success</h3>
+                            <p class="text-sm text-slate-600">Focus on Syllabus 2022 and Previous Year Questions (2013-2025).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- RESTORED PRIVACY SECTION -->
+        <section id="view-privacy" class="view-section">
+            <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-lg max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-emerald-600">🛡️ Privacy Policy</h2>
+                <div class="space-y-6 text-slate-600 text-sm md:text-base leading-relaxed article-body">
+                    <p>At Prepogy.in, one of our main priorities is the privacy of our visitors. We do not require registration or personal accounts to use our services.</p>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2 border-l-4 border-primary pl-3">1. Information We Collect</h3>
+                        <p>Prepogy is designed to be a "privacy-first" platform. We do not store personal student identifiers like phone numbers or emails. Your progress is saved locally on your device.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2 border-l-4 border-primary pl-3">2. Cookies</h3>
+                        <p>We use standard analytics and ad-serving cookies to maintain site performance and support our educational mission. These help us understand which topics students find most helpful.</p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- RESTORED TERMS SECTION -->
+        <section id="view-terms" class="view-section">
+            <button class="mb-8 font-bold flex items-center gap-2 text-slate-600 bg-white px-6 py-2.5 rounded-full shadow-sm hover:shadow-md hover:bg-slate-700 hover:text-white transition-all border border-slate-100" onclick="App.navigateTo('view-home')"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="bg-white p-8 md:p-12 rounded-[32px] shadow-lg max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-amber-600">📜 Terms and Conditions</h2>
+                <div class="space-y-6 text-slate-600 text-sm md:text-base leading-relaxed article-body">
+                    <p>Welcome to Prepogy. These terms outline the rules for using our practice platform.</p>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2 border-l-4 border-primary pl-3">1. Property Rights</h3>
+                        <p>All educational MCQs and syllabus data are sourced from official ICMAI public materials for fair educational use. Prepogy claims no ownership over the question bank itself.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-800 mb-2 border-l-4 border-primary pl-3">2. Disclaimer</h3>
+                        <p>The content provided is for practice and self-assessment purposes. While we strive for accuracy, students should always consult official study modules for final exam preparation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- AdSense Footer Banner -->
+    <!-- AdSense Footer Banner slot - Neutral Placeholder -->
     <div class="ad-container">
         <ins class="adsbygoogle"
              style="display:block"
@@ -359,8 +398,7 @@
                     next.classList.add('active');
                     this.currentViewId = viewId;
                     window.scrollTo(0,0);
-                    // Refresh Ads on view change if possible
-                    if (window.adsbygoogle) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+                    if (window.adsbygoogle) { try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {} }
                 }
             },
 
@@ -414,4 +452,3 @@
     </script>
 </body>
 </html>
-
