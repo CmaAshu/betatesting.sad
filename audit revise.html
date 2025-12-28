@@ -492,46 +492,56 @@
         function downloadCard(id) {
             const element = document.getElementById(`q-${id}`);
             const btn = document.getElementById(`download-btn-${id}`);
+            
+            // Prevent multiple clicks while processing (State Lock)
+            if (btn.getAttribute('data-processing') === 'true') return;
+            
             const originalContent = btn.innerHTML;
+            btn.setAttribute('data-processing', 'true');
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            // --- 1. DYNAMIC FILENAME FROM TOPIC ---
+            let fileName = `Prepogy_Audit_Q${id}.png`;
+            if (typeof auditData !== 'undefined') {
+                const item = auditData.find(x => x.id === id);
+                if (item && item.topic) {
+                    // Sanitize filename: replace spaces with underscores, remove special chars
+                    const safeTopic = item.topic.replace(/[^a-zA-Z0-9\-\s]/g, '').trim().replace(/\s+/g, '_');
+                    fileName = `Prepogy_${safeTopic}.png`;
+                }
+            }
 
             html2canvas(element, {
                 scale: 3, // High quality
                 useCORS: true,
-                backgroundColor: null, // Allow transparent background so our gradient works
-                windowWidth: 1440, // 1. FORCE DESKTOP LAYOUT (Triggers md/lg media queries)
+                backgroundColor: null, 
+                windowWidth: 1440, // Force Desktop Layout
+                logging: false, // Save memory
                 onclone: (clonedDoc) => {
                     const clonedCard = clonedDoc.getElementById(`q-${id}`);
                     
                     // --- 0. FORCE DESKTOP DIMENSIONS ---
-                    // Crucial for mobile users: Force the card to be wide (900px)
-                    // so the downloaded image looks exactly like the PC version.
                     clonedCard.style.width = '900px';
                     clonedCard.style.minWidth = '900px';
                     clonedCard.style.maxWidth = 'none';
                     clonedCard.style.margin = '0 auto';
                     
-                    // --- 1. FORCE VIBRANT COLORS (REMOVE REVISED STATE) ---
-                    // Even if the card is revised (gray), download it in full color
+                    // --- 1. FORCE VIBRANT COLORS ---
                     clonedCard.classList.remove('revised');
                     clonedCard.style.opacity = '1';
                     clonedCard.style.filter = 'none';
 
                     // --- 2. FIX GRADIENT BORDER RENDERING ---
-                    // html2canvas fails with 'background-clip: padding-box' + multiple backgrounds.
-                    // We reconstruct the visual appearance using DOM nesting which renders perfectly.
-                    
-                    // A. Reset Card Styles (Become the Outer Gradient Container)
                     clonedCard.style.backgroundImage = 'linear-gradient(135deg, #6366f1, #a855f7)';
-                    clonedCard.style.padding = '3px'; // This acts as the border width
-                    clonedCard.style.border = 'none'; // Remove any CSS borders
+                    clonedCard.style.padding = '3px'; 
+                    clonedCard.style.border = 'none'; 
                     clonedCard.style.boxShadow = 'none';
 
-                    // B. Create Inner White Container
+                    // Create Inner White Container
                     const wrapper = clonedDoc.createElement('div');
                     wrapper.style.backgroundColor = '#ffffff';
-                    wrapper.style.borderRadius = '17px'; // Slightly less than card's 20px
-                    wrapper.style.padding = '24px'; // Increased padding for desktop look
+                    wrapper.style.borderRadius = '17px'; 
+                    wrapper.style.padding = '24px'; 
                     wrapper.style.height = '100%';
                     wrapper.style.width = '100%';
                     wrapper.style.position = 'relative';
@@ -539,15 +549,13 @@
                     wrapper.style.display = 'flex';
                     wrapper.style.flexDirection = 'column';
 
-                    // C. Move all children into the wrapper
+                    // Move all children into the wrapper
                     while (clonedCard.firstChild) {
                         wrapper.appendChild(clonedCard.firstChild);
                     }
                     clonedCard.appendChild(wrapper);
 
                     // --- 3. CLEANUP UI ELEMENTS ---
-                    
-                    // Hide buttons
                     const actionBtns = wrapper.querySelector('.action-buttons');
                     if (actionBtns) actionBtns.style.display = 'none';
 
@@ -558,11 +566,6 @@
                     const answerDiv = wrapper.querySelector(`#answer-${id}`);
                     if (answerDiv) {
                         answerDiv.classList.remove('hidden');
-                        
-                        // CRITICAL: Remove animation class. 
-                        // The 'animate-fade-in-up' starts with opacity:0.
-                        // Since we are unhiding it inside onclone, the animation starts at 0 opacity,
-                        // causing html2canvas to capture it as invisible. We must force it visible.
                         answerDiv.classList.remove('animate-fade-in-up'); 
                         answerDiv.style.opacity = '1';
                         answerDiv.style.transform = 'none';
@@ -587,14 +590,30 @@
                     wrapper.appendChild(watermark);
                 }
             }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Prepogy_Audit_Q${id}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                btn.innerHTML = originalContent;
+                // --- MEMORY FIX: Use Blob instead of DataURL ---
+                // DataURLs are large strings that crash mobile memory. Blobs are efficient binary references.
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = fileName;
+                    link.href = url;
+                    document.body.appendChild(link); // Required for mobile
+                    link.click();
+                    
+                    // Cleanup immediately
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    btn.innerHTML = originalContent;
+                    btn.removeAttribute('data-processing');
+                    
+                    // Explicitly clear canvas to free GPU memory
+                    canvas.remove();
+                }, 'image/png', 1.0);
             }).catch(err => {
                 console.error(err);
                 btn.innerHTML = originalContent;
+                btn.removeAttribute('data-processing');
                 alert('Download failed. Please try again.');
             });
         }
