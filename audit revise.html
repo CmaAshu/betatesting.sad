@@ -727,8 +727,18 @@
             const element = document.getElementById(`q-${id}`);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                element.classList.add('ring-4', 'ring-indigo-500/30');
-                setTimeout(() => element.classList.remove('ring-4', 'ring-indigo-500/30'), 2000);
+                
+                // --- ENHANCED HIGHLIGHT EFFECT (GREEN GLOW) ---
+                // Makes the card visually "pop" with a green glow so the user knows exactly which one was selected.
+                // Uses spread syntax (...) to add/remove multiple classes cleanly.
+                const highlightClasses = ['ring-4', 'ring-emerald-500', 'ring-offset-4', 'scale-[1.02]', 'shadow-[0_0_35px_rgba(16,185,129,0.6)]', 'z-20'];
+                
+                element.classList.add(...highlightClasses);
+                
+                // Remove the highlight after 2.5 seconds
+                setTimeout(() => {
+                    element.classList.remove(...highlightClasses);
+                }, 2500);
             }
         }
 
