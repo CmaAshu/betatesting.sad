@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en" class="scrollbar-gutter-stable">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#6366f1">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLGRHV6077"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-FLGRHV6077');
+    </script>
+
+    <!-- SEO META TAGS -->
+    <title>Prepogy - CMA Inter Audit Revision Hub | Important Questions</title>
+    <meta name="description" content="Master CMA Inter Audit with Prepogy's interactive revision hub. Practice important questions, track your progress, view detailed solutions, and prepare effectively for your exams.">
+    <meta name="keywords" content="CMA Inter Audit, Audit Revision, CMA Important Questions, Cost Audit, Company Audit, Prepogy, CMA Exam Preparation, Audit Notes">
+    <meta name="author" content="Prepogy">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://prepogy.in/audit-revision-hub" />
+
+    <!-- OPEN GRAPH (Social Media Sharing) -->
+    <meta property="og:title" content="CMA Inter Audit Revision Hub - Prepogy">
+    <meta property="og:description" content="Interactive revision tool for CMA Inter Audit. Track progress, solve questions, and download notes.">
+    <meta property="og:image" content="https://prepogy.in/assets/images/audit-share-banner.png"> <!-- Replace with actual image URL -->
+    <meta property="og:url" content="https://prepogy.in/audit-revision-hub">
+    <meta property="og:type" content="website">
+
+    <!-- TWITTER CARD -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CMA Inter Audit Revision Hub">
+    <meta name="twitter:description" content="Boost your Audit preparation with important questions and progress tracking.">
+    <meta name="twitter:image" content="https://prepogy.in/assets/images/audit-share-banner.png">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Data Source -->
+    <script src="audit_data.js"></script>
+    
+    <!-- REQUIRED FOR DOWNLOAD: html2canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- GOOGLE ADSENSE SCRIPT -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7792469883739877"
+     crossorigin="anonymous"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        primary: { DEFAULT: '#6366f1', dark: '#4f46e5' },
+                        success: '#10b981', 
+                        error: '#ef4444', 
+                        surface: '#ffffff',
+                    },
+                    boxShadow: {
+                        soft: '0 10px 40px -10px rgba(0,0,0,0.06)',
+                        hover: '0 20px 40px -5px rgba(99, 102, 241, 0.12)',
+                        'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
+                    },
+                    animation: {
+                        'rise': 'rise 20s linear infinite',
+                        'floating': 'floating 4s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        rise: { 'from': { transform: 'translateY(0) rotate(0deg)', opacity: '0.4' }, 'to': { transform: 'translateY(-120vh) rotate(360deg)', opacity: '0' } },
+                        floating: { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-12px)' } },
+                        fadeInUp: { 'from': { opacity: '0', transform: 'translateY(30px)' }, 'to': { opacity: '1', transform: 'translateY(0)' } },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+            .scrollbar-gutter-stable { scrollbar-gutter: stable; }
+            .text-gradient-original { @apply bg-clip-text text-transparent bg-[linear-gradient(135deg,#10b981,#6366f1,#db2777,#f59e0b)]; }
+        }
+
+        @layer components {
+            /* COMPACT CARD STYLING */
+            .card-question {
+                @apply border-2 border-transparent rounded-[20px] p-4 
+                       transition-all duration-300 shadow-soft relative overflow-hidden bg-white mb-3 mx-auto w-full max-w-4xl;
+                background-image: linear-gradient(white, white), linear-gradient(135deg, #6366f1, #a855f7);
+                background-origin: padding-box, border-box;
+                background-clip: padding-box, border-box;
+            }
+
+            .card-question.revised {
+                @apply border-emerald-400 opacity-60 grayscale-[0.8]; 
+                background-image: linear-gradient(white, white), linear-gradient(135deg, #10b981, #10b981);
+            }
+            .card-question.revised:hover { @apply opacity-100 grayscale-0; }
+
+            .card-answer {
+                @apply border-2 border-transparent rounded-[20px] p-5 
+                       transition-all duration-300 shadow-soft relative overflow-hidden bg-white mt-3;
+                background-image: linear-gradient(white, white), linear-gradient(135deg, #10b981, #0ea5e9);
+                background-origin: padding-box, border-box;
+                background-clip: padding-box, border-box;
+            }
+
+            .shape { @apply absolute bottom-[-150px] opacity-15 font-bold block will-change-transform animate-rise; line-height: 1; }
+            
+            .active-nav {
+                @apply bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-200 border-none;
+            }
+
+            .search-pill {
+                @apply px-4 py-1.5 rounded-full border border-slate-200 text-[11px] font-bold text-slate-500 bg-white hover:border-indigo-500 hover:text-indigo-600 transition-colors cursor-pointer whitespace-nowrap;
+            }
+            
+            /* Ad Container Styles */
+            .ad-container { @apply w-full overflow-hidden flex-col items-center justify-center my-3 min-h-[90px] bg-slate-50/50 rounded-lg border border-slate-100 p-2; }
+            .ad-label { @apply text-[9px] text-slate-300 font-bold uppercase tracking-widest mb-1 w-full text-center; }
+
+            /* Content Typography */
+            .answer-content table { @apply min-w-full divide-y divide-slate-200 border border-slate-100 rounded-xl overflow-hidden mt-4 mb-4 bg-white text-sm; }
+            .answer-content th { @apply bg-slate-50 px-4 py-3 text-left text-[10px] font-black text-slate-500 uppercase tracking-widest border-b; }
+            .answer-content td { @apply px-4 py-3 text-sm text-slate-600 border-b border-r last:border-r-0 align-top leading-relaxed; }
+            .answer-content strong { @apply text-indigo-700 font-bold; }
+            .answer-content ul { @apply list-none space-y-2 mb-4; }
+            .answer-content li { @apply relative pl-6 text-slate-600; }
+            .answer-content li::before { content: '👉'; @apply absolute left-0 text-xs mt-0.5; }
+
+            .toc-item { @apply w-full text-left px-4 py-2 text-[11px] text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all font-medium border-l-2 border-transparent hover:border-indigo-400 truncate; }
+        
+            /* Zen Mode Overrides */
+            body.zen-mode #sidebar { @apply hidden; }
+            body.zen-mode .bg-shapes { @apply hidden; }
+            body.zen-mode main { @apply max-w-3xl mx-auto; }
+            body.zen-mode header { @apply bg-white/95; }
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-gray-800 overflow-x-hidden antialiased scroll-smooth flex flex-col h-screen">
+
+    <!-- Progress Bar (Sticky) -->
+    <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200">
+        <div id="reading-progress" class="h-full bg-gradient-to-r from-emerald-400 to-indigo-600 w-0 transition-all duration-300"></div>
+    </div>
+
+    <!-- Background Shapes (Matching Index) -->
+    <div class="bg-shapes fixed inset-0 w-full h-full pointer-events-none -z-10 overflow-hidden select-none" aria-hidden="true">
+        <div class="shape left-[10%] text-[55px] text-emerald-500" style="animation-duration: 22s;">₹</div>
+        <div class="shape left-[50%] text-[55px] text-amber-500" style="animation-duration: 20s;">€</div>
+        <div class="shape left-[80%] text-[65px] text-indigo-500" style="animation-duration: 28s;">×</div>
+    </div>
+
+    <!-- Mobile Navigation FAB (Bottom Right - Thumb Zone) -->
+    <button id="mobile-toc-trigger" class="lg:hidden fixed bottom-6 right-6 z-[60] w-14 h-14 bg-indigo-600 shadow-xl shadow-indigo-300 rounded-full flex items-center justify-center text-white active:scale-95 transition-all hover:-translate-y-1" aria-label="Open Table of Contents">
+        <i class="fas fa-list-ul text-lg"></i>
+    </button>
+
+    <!-- Mobile TOC Overlay -->
+    <div id="mobile-toc-overlay" class="fixed inset-0 z-[70] bg-black/40 backdrop-blur-sm hidden flex justify-end">
+        <div class="w-[85%] max-w-[320px] bg-white h-full shadow-2xl animate-fade-in-up flex flex-col p-6 rounded-l-[30px]">
+            <div class="flex items-center justify-between mb-8">
+                <h4 class="font-black uppercase text-xs text-gradient-original tracking-widest">Question Index</h4>
+                <button id="close-mobile-toc" class="text-slate-400 hover:text-slate-600 p-2"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="mobile-toc-list" class="flex-1 overflow-y-auto space-y-1 pr-2 scrollbar-hide">
+                <!-- TOC items injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Intro Modal (First Time Visit) -->
+    <div id="introModal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-xl flex items-center justify-center p-5 hidden">
+        <div class="bg-white p-8 md:p-12 rounded-[40px] w-full max-w-[500px] animate-fade-in-up relative shadow-2xl overflow-hidden text-center">
+            <div class="w-24 h-24 mx-auto mb-6 animate-floating">
+                <img src="prep.png" alt="Prepogy Logo" class="w-full h-auto object-contain" onerror="this.src='https://via.placeholder.com/100?text=Audit'">
+            </div>
+            <h3 class="text-2xl md:text-3xl font-extrabold uppercase tracking-tight mb-4 leading-tight text-gradient-original">Audit Revision Hub</h3>
+            <p class="text-slate-500 text-sm md:text-base leading-relaxed mb-10">
+                Track your progress, focus on key concepts, and master Audit for CMA Inter. 🎯
+            </p>
+            <button onclick="closeIntro()" class="w-full py-5 bg-indigo-600 text-white rounded-[22px] font-black uppercase tracking-widest shadow-lg shadow-indigo-200 hover:brightness-110 hover:-translate-y-0.5 transition-all text-sm">
+                Start Revision 🚀
+            </button>
+        </div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" class="hidden lg:flex flex-col w-72 bg-white border-r h-full relative z-40">
+            <div class="p-8 border-b flex items-center gap-4 cursor-pointer hover:bg-slate-50 transition-colors" onclick="window.location.href='index.html'">
+                <div class="w-10 h-10 flex items-center justify-center shrink-0">
+                    <img src="prep.png" alt="Prepogy Logo" class="w-full h-auto" onerror="this.src='https://via.placeholder.com/50?text=P'">
+                </div>
+                <div>
+                    <h2 class="text-xl font-extrabold tracking-tight leading-none text-gradient-original">Prepogy</h2>
+                    <p class="text-[9px] text-indigo-500 font-black uppercase tracking-[2px] mt-1"><i class="fas fa-arrow-left mr-1"></i> Back to Home</p>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto scrollbar-hide p-6 space-y-6">
+                <!-- Progress Widget -->
+                <div class="bg-gradient-to-br from-indigo-50 to-white p-5 rounded-2xl border border-indigo-100">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-slate-400">Your Progress</span>
+                        <span id="progress-percent" class="text-lg font-bold text-indigo-600">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                        <div id="sidebar-progress-bar" class="bg-indigo-500 h-1.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-2 text-center" id="progress-text">0/0 Questions Revised</p>
+                </div>
+
+                <!-- Table of Contents -->
+                <div>
+                    <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest px-2 mb-3">Jump to Question</p>
+                    <div id="sidebar-toc-list" class="space-y-1"></div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Content Feed -->
+        <main class="flex-1 flex flex-col min-w-0 bg-transparent relative transition-all duration-500">
+            
+            <header class="p-5 lg:p-6 bg-white/80 backdrop-blur-xl border-b sticky top-0 z-30 transition-all">
+                <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                    
+                    <div class="text-left w-full md:w-auto flex items-center justify-between">
+                        <div>
+                            <!-- Applied Gradient to Page Title (SEO: Changed h2 to h1 for semantic importance) -->
+                            <h1 class="text-xl font-black uppercase tracking-tight text-gradient-original">CMA Inter Audit</h1>
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">Focus on Important Questions</p>
+                        </div>
+                        <!-- Mobile Home Link -->
+                        <a href="index.html" class="md:hidden text-indigo-500 hover:text-indigo-700" aria-label="Home">
+                            <i class="fas fa-home text-xl"></i>
+                        </a>
+                    </div>
+
+                    <div class="w-full md:w-auto flex-1 max-w-lg">
+                        <div class="relative group mb-2">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" id="search-input" placeholder="Search keywords..." 
+                                   class="block w-full pl-10 pr-12 py-3 border-2 border-slate-100 rounded-[18px] bg-slate-50/50 placeholder-slate-400 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all text-sm font-medium"
+                                   aria-label="Search Questions">
+                            
+                            <!-- Zen Mode Toggle -->
+                            <button onclick="toggleZenMode()" class="absolute inset-y-0 right-2 px-3 text-slate-400 hover:text-indigo-600 transition-colors" title="Toggle Zen Mode" aria-label="Toggle Zen Mode">
+                                <i class="fas fa-expand" id="zen-icon"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Search Pills / Topic Filters -->
+                        <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-1" id="topic-pills">
+                            <!-- Pills injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="content-area" class="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-hide scroll-smooth">
+                <!-- Top Ad Place (Initially Hidden via style) -->
+                <div id="top-ad-container" class="max-w-4xl mx-auto ad-container mb-4" style="display: none;">
+                    <span class="ad-label">Advertisement</span>
+                    <!-- REPLACE DATA-AD-SLOT WITH YOUR ACTUAL UNIT ID -->
+                    <ins class="adsbygoogle"
+                         style="display:block; width: 100%;"
+                         data-ad-client="ca-pub-7792469883739877"
+                         data-ad-slot="1234567890" 
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+
+                <div id="questions-feed" class="max-w-4xl mx-auto pb-10">
+                    <!-- Cards will be injected here -->
+                </div>
+
+                <!-- Footer Ad Place (Initially Hidden via style) -->
+                <div id="bottom-ad-container" class="max-w-4xl mx-auto ad-container mt-6 mb-24" style="display: none;">
+                    <span class="ad-label">Advertisement</span>
+                    <!-- REPLACE DATA-AD-SLOT WITH YOUR ACTUAL UNIT ID -->
+                    <ins class="adsbygoogle"
+                         style="display:block; width: 100%;"
+                         data-ad-client="ca-pub-7792469883739877"
+                         data-ad-slot="1234567890" 
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>
+                         (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        // Change this to true to activate ads
+        const ENABLE_ADS = false;
+
+        // --- State Management ---
+        let currentFilter = 'all';
+        let revisedQuestions = JSON.parse(localStorage.getItem('prepogy_audit_progress')) || [];
+        let isZenMode = false;
+
+        // --- DOM Elements ---
+        const feed = document.getElementById('questions-feed');
+        // Removed sectionNav element reference
+        const sidebarTOC = document.getElementById('sidebar-toc-list');
+        const mobileTOC = document.getElementById('mobile-toc-list');
+        const searchInput = document.getElementById('search-input');
+        const topicPillsContainer = document.getElementById('topic-pills');
+        const contentArea = document.getElementById('content-area');
+        
+        // --- Initialization ---
+        function init() {
+            // Check for first visit
+            if(!localStorage.getItem('prepogy_audit_visited')) {
+                document.getElementById('introModal').classList.remove('hidden');
+                localStorage.setItem('prepogy_audit_visited', 'true');
+            }
+
+            // Handle Static Ads Visibility
+            if (ENABLE_ADS) {
+                const topAd = document.getElementById('top-ad-container');
+                const botAd = document.getElementById('bottom-ad-container');
+                if(topAd) topAd.style.display = 'flex';
+                if(botAd) botAd.style.display = 'flex';
+            }
+
+            // Dummy data fallback
+            if (typeof auditData === 'undefined') {
+                console.warn('audit_data.js not found. Using dummy data.');
+                window.auditData = [
+                    { id: 1, section: 'Company Audit', topic: 'Auditor Qualification', meta: 'June 2023', question: 'Who is eligible to be appointed as an auditor of a company?', answer: '<p><strong>A person shall be eligible</strong> for appointment as an auditor of a company only if he is a <strong>Chartered Accountant</strong> within the meaning of the Chartered Accountants Act, 1949. <br><br>Under <strong>Section 141</strong> of the Companies Act, 2013, a firm qualifies if majority partners practicing in India are qualified. <br><br>Key disqualifications include: <ul><li>Body Corporate</li><li>Officer or Employee</li><li>Person who is indebted for > Rs. 5 Lakhs</li></ul></p>' },
+                    { id: 2, section: 'Cost Audit', topic: 'Applicability', meta: 'Dec 2022', question: 'Discuss the applicability of Cost Audit under Companies Act, 2013.', answer: '<p><strong>Cost Audit</strong> is applicable under Section 148. The Central Government may direct audit of cost records for class of companies having: <ul><li><strong>Net Worth</strong> criteria met</li><li><strong>Turnover</strong> exceeding prescribed limits (Regulated sectors: Rs. 50 Cr overall, Rs. 25 Cr individual product).</li></ul></p>' },
+                    { id: 3, section: 'Audit Report', topic: 'CARO 2020', meta: 'June 2022', question: 'Explain the reporting requirements under CARO 2020.', answer: '<p>CARO 2020 applies to...</p>' },
+                    { id: 4, section: 'Internal Audit', topic: 'Scope', meta: 'Dec 2021', question: 'What is the scope of Internal Audit?', answer: '<p>Scope includes...</p>' },
+                    { id: 5, section: 'Bank Audit', topic: 'NPA', meta: 'June 2021', question: 'Define Non-Performing Assets.', answer: '<p>An asset becomes NPA when...</p>' }
+                ];
+            }
+
+            // SEO: Generate Schema.org structured data dynamically
+            generateStructuredData();
+
+            updateProgressUI();
+            renderFeed(auditData);
+            createTopicPills();
+            renderTOC(auditData);
+            
+            // Search Listener
+            searchInput.addEventListener('input', () => handleSearch(searchInput.value));
+
+            // Mobile TOC Listeners
+            document.getElementById('mobile-toc-trigger').addEventListener('click', () => document.getElementById('mobile-toc-overlay').classList.remove('hidden'));
+            document.getElementById('close-mobile-toc').addEventListener('click', () => document.getElementById('mobile-toc-overlay').classList.add('hidden'));
+            document.getElementById('mobile-toc-overlay').addEventListener('click', (e) => { if(e.target === document.getElementById('mobile-toc-overlay')) document.getElementById('mobile-toc-overlay').classList.add('hidden'); });
+
+            // Scroll Progress Listener
+            contentArea.onscroll = function() {
+                const totalHeight = contentArea.scrollHeight - contentArea.clientHeight;
+                const progress = totalHeight > 0 ? (contentArea.scrollTop / totalHeight) * 100 : 0;
+                document.getElementById('reading-progress').style.width = progress + "%";
+            };
+        }
+
+        function closeIntro() {
+            document.getElementById('introModal').classList.add('hidden');
+        }
+
+        // --- Core Logic ---
+
+        // SEO: FAQ Page Schema Generation
+        function generateStructuredData() {
+            // This allows Google to index the Q&A content even if loaded via JS
+            const schema = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": auditData.map(item => ({
+                    "@type": "Question",
+                    "name": item.question,
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": item.answer.replace(/<[^>]*>?/gm, '') // Strip HTML for schema text cleanliness
+                    }
+                }))
+            };
+            
+            const script = document.createElement('script');
+            script.type = "application/ld+json";
+            script.text = JSON.stringify(schema);
+            document.head.appendChild(script);
+        }
+
+        function toggleZenMode() {
+            isZenMode = !isZenMode;
+            document.body.classList.toggle('zen-mode');
+            const icon = document.getElementById('zen-icon');
+            icon.className = isZenMode ? 'fas fa-compress' : 'fas fa-expand';
+        }
+
+        function handleSearch(term) {
+            term = term.toLowerCase();
+            const filtered = auditData.filter(item => {
+                const matchesSection = currentFilter === 'all' || item.section === currentFilter;
+                const matchesSearch = item.question.toLowerCase().includes(term) || 
+                                    item.topic.toLowerCase().includes(term) ||
+                                    item.section.toLowerCase().includes(term) ||
+                                    (item.meta && item.meta.toLowerCase().includes(term));
+                return matchesSection && matchesSearch;
+            });
+            renderFeed(filtered);
+            renderTOC(filtered);
+        }
+
+        function filterBySection(section) {
+            currentFilter = section;
+            const filtered = auditData.filter(item => currentFilter === 'all' || item.section === currentFilter);
+            renderFeed(filtered);
+            renderTOC(filtered);
+        }
+
+        function createTopicPills() {
+            const topics = [...new Set(auditData.map(item => item.section))]; 
+            let html = `<button onclick="handleSearch('')" class="search-pill bg-slate-800 text-white border-slate-800">Clear</button>`;
+            topics.forEach(t => {
+                html += `<button onclick="setSearch('${t}')" class="search-pill">${t}</button>`;
+            });
+            topicPillsContainer.innerHTML = html;
+        }
+
+        function setSearch(term) {
+            searchInput.value = term;
+            handleSearch(term);
+        }
+
+        function toggleRevision(id) {
+            const index = revisedQuestions.indexOf(id);
+            if (index > -1) {
+                revisedQuestions.splice(index, 1); // Uncheck
+            } else {
+                revisedQuestions.push(id); // Check
+            }
+            localStorage.setItem('prepogy_audit_progress', JSON.stringify(revisedQuestions));
+            
+            const card = document.getElementById(`q-${id}`);
+            const btn = document.getElementById(`rev-btn-${id}`);
+            const icon = btn.querySelector('i');
+            
+            if (revisedQuestions.includes(id)) {
+                card.classList.add('revised');
+                btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
+                btn.classList.remove('bg-white', 'text-slate-300', 'border-slate-200');
+                icon.className = 'fas fa-check';
+            } else {
+                card.classList.remove('revised');
+                btn.classList.remove('bg-emerald-500', 'text-white', 'border-emerald-500');
+                btn.classList.add('bg-white', 'text-slate-300', 'border-slate-200');
+                icon.className = 'fas fa-check opacity-20';
+            }
+            updateProgressUI();
+        }
+
+        function updateProgressUI() {
+            const total = auditData.length;
+            const revised = revisedQuestions.length;
+            const pct = total === 0 ? 0 : Math.round((revised / total) * 100);
+            
+            document.getElementById('progress-percent').innerText = `${pct}%`;
+            document.getElementById('sidebar-progress-bar').style.width = `${pct}%`;
+            document.getElementById('progress-text').innerText = `${revised}/${total} Questions Revised`;
+        }
+
+        function downloadCard(id) {
+            const element = document.getElementById(`q-${id}`);
+            const btn = document.getElementById(`download-btn-${id}`);
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            html2canvas(element, {
+                scale: 3, // High quality
+                useCORS: true,
+                backgroundColor: null, // Allow transparent background so our gradient works
+                onclone: (clonedDoc) => {
+                    const clonedCard = clonedDoc.getElementById(`q-${id}`);
+                    
+                    // --- 1. FORCE VIBRANT COLORS (REMOVE REVISED STATE) ---
+                    // Even if the card is revised (gray), download it in full color
+                    clonedCard.classList.remove('revised');
+                    clonedCard.style.opacity = '1';
+                    clonedCard.style.filter = 'none';
+
+                    // --- 2. FIX GRADIENT BORDER RENDERING ---
+                    // html2canvas fails with 'background-clip: padding-box' + multiple backgrounds.
+                    // We reconstruct the visual appearance using DOM nesting which renders perfectly.
+                    
+                    // A. Reset Card Styles (Become the Outer Gradient Container)
+                    clonedCard.style.backgroundImage = 'linear-gradient(135deg, #6366f1, #a855f7)';
+                    clonedCard.style.padding = '3px'; // This acts as the border width
+                    clonedCard.style.border = 'none'; // Remove any CSS borders
+                    clonedCard.style.boxShadow = 'none';
+
+                    // B. Create Inner White Container
+                    const wrapper = clonedDoc.createElement('div');
+                    wrapper.style.backgroundColor = '#ffffff';
+                    wrapper.style.borderRadius = '17px'; // Slightly less than card's 20px
+                    wrapper.style.padding = '16px'; // Matches original p-4
+                    wrapper.style.height = '100%';
+                    wrapper.style.width = '100%';
+                    wrapper.style.position = 'relative';
+                    wrapper.style.zIndex = '10';
+                    wrapper.style.display = 'flex';
+                    wrapper.style.flexDirection = 'column';
+
+                    // C. Move all children into the wrapper
+                    while (clonedCard.firstChild) {
+                        wrapper.appendChild(clonedCard.firstChild);
+                    }
+                    clonedCard.appendChild(wrapper);
+
+                    // --- 3. CLEANUP UI ELEMENTS ---
+                    
+                    // Hide buttons
+                    const actionBtns = wrapper.querySelector('.action-buttons');
+                    if (actionBtns) actionBtns.style.display = 'none';
+
+                    const toggleBtn = wrapper.querySelector(`#btn-${id}`);
+                    if (toggleBtn) toggleBtn.style.display = 'none';
+
+                    // --- 4. EXPAND ANSWER & FIX VISIBILITY ---
+                    const answerDiv = wrapper.querySelector(`#answer-${id}`);
+                    if (answerDiv) {
+                        answerDiv.classList.remove('hidden');
+                        
+                        // CRITICAL: Remove animation class. 
+                        // The 'animate-fade-in-up' starts with opacity:0.
+                        // Since we are unhiding it inside onclone, the animation starts at 0 opacity,
+                        // causing html2canvas to capture it as invisible. We must force it visible.
+                        answerDiv.classList.remove('animate-fade-in-up'); 
+                        answerDiv.style.opacity = '1';
+                        answerDiv.style.transform = 'none';
+                        answerDiv.style.display = 'block';
+                    }
+
+                    // --- 5. ADD WATERMARK ---
+                    const watermark = clonedDoc.createElement('div');
+                    watermark.innerText = 'PREPOGY.IN';
+                    Object.assign(watermark.style, {
+                        position: 'absolute',
+                        top: '15px',
+                        right: '20px',
+                        fontSize: '16px',
+                        fontWeight: '800',
+                        color: '#000000', // Jet Black
+                        opacity: '1',
+                        zIndex: '0',
+                        pointerEvents: 'none',
+                        fontFamily: 'Poppins, sans-serif'
+                    });
+                    wrapper.appendChild(watermark);
+                }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Prepogy_Audit_Q${id}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                btn.innerHTML = originalContent;
+            }).catch(err => {
+                console.error(err);
+                btn.innerHTML = originalContent;
+                alert('Download failed. Please try again.');
+            });
+        }
+
+        function renderFeed(data) {
+            if (data.length === 0) {
+                feed.innerHTML = `
+                    <div class="text-center py-20 animate-fade-in-up">
+                        <i class="fas fa-search text-4xl text-slate-200 mb-4"></i>
+                        <h4 class="text-lg font-bold text-slate-400">No matching questions found</h4>
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlContent = '';
+            
+            data.forEach((item, index) => {
+                const isRevised = revisedQuestions.includes(item.id);
+                
+                // Add Question Card - COMPACT VERSION
+                htmlContent += `
+                <article id="q-${item.id}" class="card-question ${isRevised ? 'revised' : ''} animate-fade-in-up" style="animation-delay: ${Math.min(index * 0.05, 1)}s">
+                    <div class="flex flex-wrap items-start justify-between gap-4 mb-2">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2 py-0.5 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest rounded shadow-sm">Important</span>
+                                <span class="px-2 py-0.5 bg-slate-50 text-slate-500 text-[9px] font-black uppercase tracking-widest rounded border border-slate-100">${item.section}</span>
+                                ${item.meta ? `<span class="px-2 py-0.5 bg-amber-50 text-amber-600 text-[9px] font-black uppercase tracking-widest rounded border border-amber-100 flex items-center gap-1"><i class="far fa-clock text-[8px]"></i>${item.meta}</span>` : ''}
+                            </div>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest pl-0.5">${item.topic}</span>
+                        </div>
+                        
+                        <!-- Action Buttons Group (targeted by class for hiding) -->
+                        <div class="flex gap-2 action-buttons">
+                            <button id="download-btn-${item.id}" onclick="downloadCard(${item.id})" 
+                                    class="w-6 h-6 rounded-full border bg-white text-slate-300 border-slate-200 hover:border-indigo-400 hover:text-indigo-400 flex items-center justify-center transition-all shadow-sm"
+                                    title="Download Card Image" aria-label="Download Question">
+                                <i class="fas fa-download text-xs"></i>
+                            </button>
+                            <button id="rev-btn-${item.id}" onclick="toggleRevision(${item.id})" 
+                                    class="w-6 h-6 rounded-full border flex items-center justify-center transition-all shadow-sm group ${isRevised ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white text-slate-300 border-slate-200 hover:border-emerald-400 hover:text-emerald-400'}"
+                                    title="Mark as Revised" aria-label="Mark as Revised">
+                                <i class="fas fa-check text-xs ${isRevised ? '' : 'opacity-20 group-hover:opacity-100'}"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 items-start mb-3">
+                        <h3 class="text-sm md:text-base font-bold text-slate-800 leading-snug">${item.question}</h3>
+                    </div>
+
+                    <button id="btn-${item.id}" onclick="toggleSolution(${item.id})" 
+                            class="w-auto px-6 py-1 mx-auto rounded-full text-[9px] font-black uppercase tracking-widest transition-all bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white hover:shadow-sm border border-indigo-100 flex items-center justify-center group mt-2" aria-label="Toggle Answer">
+                        <span class="group-hover:hidden flex items-center"><i class="fas fa-book-open mr-2"></i> View Answer</span>
+                        <span class="hidden group-hover:flex items-center"><i class="fas fa-eye mr-2"></i> Reveal</span>
+                    </button>
+
+                    <div id="answer-${item.id}" class="hidden card-answer animate-fade-in-up">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-6 h-6 bg-emerald-500 text-white rounded flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-align-left"></i></div>
+                            <h4 class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Full Explanation</h4>
+                        </div>
+                        <div class="answer-content prose prose-slate max-w-none text-slate-600 text-xs md:text-sm">${item.answer}</div>
+                    </div>
+                </article>`;
+
+                // INJECT AD EVERY 4 QUESTIONS (Only if ENABLE_ADS is true)
+                if (ENABLE_ADS && (index + 1) % 4 === 0 && index !== data.length - 1) {
+                    htmlContent += `
+                        <div class="ad-container max-w-4xl mx-auto my-4" style="display: flex;">
+                            <span class="ad-label">Advertisement</span>
+                            <ins class="adsbygoogle"
+                                 style="display:block; width: 100%;"
+                                 data-ad-client="ca-pub-7792469883739877"
+                                 data-ad-slot="1234567890" 
+                                 data-ad-format="auto"
+                                 data-full-width-responsive="true"></ins>
+                        </div>`;
+                }
+            });
+
+            feed.innerHTML = htmlContent;
+
+            // Re-initialize AdSense for new elements ONLY if ads are enabled
+            if (ENABLE_ADS) {
+                setTimeout(() => {
+                    try {
+                        const ads = feed.querySelectorAll('.adsbygoogle');
+                        ads.forEach(ad => {
+                            if (!ad.getAttribute('data-adsbygoogle-status')) {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            }
+                        });
+                    } catch(e) { console.log('AdSense init error:', e); }
+                }, 100);
+            }
+        }
+
+        // --- Navigation Logic ---
+
+        function createSectionNav() {
+            // Function body removed
+        }
+
+        // ... rest of the functions (already included above)
+        
+        function renderTOC(data) {
+            const tocHTML = data.map(item => `
+                <button onclick="jumpToQuestion(${item.id})" class="toc-item group">
+                    <span class="opacity-40 group-hover:opacity-100 mr-2 text-[9px]">${item.id}.</span> ${item.topic}
+                </button>
+            `).join('');
+            
+            sidebarTOC.innerHTML = tocHTML;
+            mobileTOC.innerHTML = tocHTML;
+
+            if (data.length === 0) {
+                sidebarTOC.innerHTML = '<p class="text-[10px] text-slate-400 px-4">No results</p>';
+                mobileTOC.innerHTML = '<p class="text-[10px] text-slate-400 px-4">No results</p>';
+            }
+        }
+
+        function jumpToQuestion(id) {
+            scrollToId(id);
+            document.getElementById('mobile-toc-overlay').classList.add('hidden');
+        }
+
+        function scrollToId(id) {
+            const element = document.getElementById(`q-${id}`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                element.classList.add('ring-4', 'ring-indigo-500/30');
+                setTimeout(() => element.classList.remove('ring-4', 'ring-indigo-500/30'), 2000);
+            }
+        }
+
+        function toggleSolution(id) {
+            const content = document.getElementById(`answer-${id}`);
+            const btn = document.getElementById(`btn-${id}`);
+            const isHidden = content.classList.contains('hidden');
+            
+            if (isHidden) {
+                content.classList.remove('hidden');
+                btn.innerHTML = `<i class="fas fa-eye-slash mr-2"></i> Hide Answer`;
+                btn.classList.add('bg-slate-800', 'text-white', 'border-slate-800');
+                btn.classList.remove('bg-indigo-50', 'text-indigo-600');
+                content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                content.classList.add('hidden');
+                btn.innerHTML = `<i class="fas fa-book-open mr-2"></i> View Answer`;
+                btn.classList.remove('bg-slate-800', 'text-white', 'border-slate-800');
+                btn.classList.add('bg-indigo-50', 'text-indigo-600');
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
