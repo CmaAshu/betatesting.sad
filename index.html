@@ -115,6 +115,19 @@
             .card-inter, .subj-inter, .mode-bank { background-image: linear-gradient(white, white), linear-gradient(135deg, #6366f1, #a855f7); }
             .card-final, .subj-final, .mode-pyq { background-image: linear-gradient(white, white), linear-gradient(135deg, #f59e0b, #db2777); }
             .mode-sjc { background-image: linear-gradient(white, white), linear-gradient(135deg, #036176, #024a5a); }
+            
+            /* UPDATED AUDIT REVISION CARD STYLE - Animated Gradient Border */
+            .mode-audit-revise { 
+                background-image: linear-gradient(white, white), linear-gradient(45deg, #10b981, #6366f1, #db2777, #f59e0b);
+                background-size: 100% 100%, 400% 400%;
+                animation: gradient-xy 6s ease infinite;
+            }
+            
+            @keyframes gradient-xy {
+                0%, 100% { background-position: 0% 50%; }
+                50% { background-position: 100% 50%; }
+            }
+            
             .shape { @apply absolute bottom-[-150px] opacity-15 font-bold block will-change-transform animate-rise; line-height: 1; }
             .ad-container { @apply my-6 mx-auto text-center w-full overflow-hidden max-w-4xl min-h-[50px]; }
             .article-body h2 { @apply text-xl md:text-2xl font-black text-slate-800 mt-10 mb-5 flex items-center gap-2; }
@@ -299,6 +312,14 @@
                     <div class="w-14 h-14 rounded-2xl bg-[#036176] text-white font-bold flex items-center justify-center shrink-0 shadow-inner">SJC</div>
                     <div><h3 class="font-bold text-lg text-slate-700">Chapter wise Quiz</h3><p class="text-[10px] text-slate-400 font-bold">Expert Guidance</p></div>
                 </div>
+                <!-- REBRANDED AUDIT REVISION CARD -->
+                <div id="cardAuditRevise" class="subject-card mode-audit-revise flex items-center gap-5 text-left p-6 hidden cursor-pointer group" onclick="window.location.href='audit revise.html'">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 via-indigo-500 to-pink-500 text-white font-bold flex items-center justify-center shrink-0 shadow-lg text-2xl group-hover:scale-110 transition-transform duration-300"><i class="fas fa-brain"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-purple-600 to-amber-500">Audit Revision Hub</h3>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Boost Your Score</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -408,14 +429,32 @@
                 syllabus: {
                     foundation: [{id:1,t:"P1: Business Laws", i:"fa-gavel", c:"text-emerald-500"}, {id:2,t:"P2: Accounting", i:"fa-calculator", c:"text-blue-500"}, {id:3,t:"P3: Maths & Stats", i:"fa-chart-line", c:"text-indigo-500"}, {id:4,t:"P4: Economics", i:"fa-globe", c:"text-cyan-500"}],
                     interG1: [{id:5,t:"P5: Law & Ethics", i:"fa-scale-balanced", c:"text-indigo-600"}, {id:6,t:"P6: Fin. Accounting", i:"fa-book", c:"text-blue-600"}, {id:7,t:"P7: Taxation", i:"fa-receipt", c:"text-red-500"}, {id:8,t:"P8: Cost Account", i:"fa-coins", c:"text-emerald-600"}],
-                    interG2: [{id:9,t:"P9: OMSM", i:"fa-cogs", c:"text-gray-600"}, {id:10,t:"P10: Audit", i:"fa-clipboard-check", c:"text-cyan-600"}, {id:11,t:"P11: FMDA", i:"fa-chart-pie", c:"text-blue-400"}, {id:12,t:"P12: Mgmt Account", i:"fa-laptop-code", c:"text-purple-600"}],
+                    interG2: [{id:9,t:"P9: OMSM", i:"fa-cogs", c:"text-gray-600"}, {id:10,t:"P10: Corp. Acc. & Audit", i:"fa-clipboard-check", c:"text-cyan-600"}, {id:11,t:"P11: FMDA", i:"fa-chart-pie", c:"text-blue-400"}, {id:12,t:"P12: Mgmt Account", i:"fa-laptop-code", c:"text-purple-600"}],
                     finalG3: [{id:13,t:"P13: Corp Laws", i:"fa-building-columns", c:"text-amber-700"}, {id:14,t:"P14: SFM", i:"fa-chart-area", c:"text-emerald-500"}, {id:15,t:"P15: DT & IT", i:"fa-earth-americas", c:"text-red-600"}, {id:16,t:"P16: SCM", i:"fa-bullseye", c:"text-blue-700"}],
                     finalG4: [{id:17,t:"P17: Cost Audit", i:"fa-certificate", c:"text-orange-500"}, {id:18,t:"P18: CFR", i:"fa-file-invoice-dollar", c:"text-blue-800"}, {id:19,t:"P19: Indirect Tax", i:"fa-truck-fast", c:"text-red-400"}, {id:'20A',t:"P20A: SPMBV", i:"fa-rocket", c:"text-pink-600"}, {id:'20B',t:"P20B: Risk Mgmt", i:"fa-chess-knight", c:"text-violet-500"}, {id:'20C',t:"P20C: International Taxation", i:"fa-plane-departure", c:"text-emerald-500"}]
                 }
             },
 
             init() {
-                if (!history.state) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const hasFinished = urlParams.has('finished');
+                const wasInQuiz = sessionStorage.getItem('prepogy_quiz_active');
+                
+                // CRITICAL LOOP FIX: If return from quiz is detected via param and session flag
+                if (hasFinished && wasInQuiz) {
+                    sessionStorage.removeItem('prepogy_quiz_active');
+                    // We jump back 2 steps in history: [Home, Quiz, Home(current)] -> goes to original Home
+                    // This ensures "Back" from the resulting Home exits the site.
+                    if (history.length > 2) {
+                        history.go(-2);
+                        return;
+                    }
+                }
+
+                // Standard cleanup if just the param is present
+                if (hasFinished) {
+                    history.replaceState({ viewId: 'view-home' }, '', window.location.pathname);
+                } else if (!history.state) {
                     history.replaceState({ viewId: 'view-home' }, '', '');
                 }
                 
@@ -431,9 +470,29 @@
 
             navigateTo(viewId, paperData = null) {
                 if (this.currentViewId === viewId && !paperData) return;
+                
+                // NAVIGATION IMPROVEMENT: If navigating home, clear the current selection entry
+                if (viewId === 'view-home') {
+                    if (this.currentViewId !== 'view-home') {
+                        // Replace the current sub-menu state with Home, clearing the selection path
+                        history.replaceState({ viewId: 'view-home' }, '', window.location.pathname);
+                        this.showView('view-home');
+                    }
+                    return;
+                }
+
                 const state = { viewId: viewId };
                 if (paperData) state.paperData = paperData;
-                history.pushState(state, '', '');
+
+                // NAVIGATION FIX: Use pushState ONLY for the first step away from home.
+                // All subsequent menu changes (Subject -> Dashboard) use replaceState.
+                // Result: [Home, CurrentMenu]. One back press always hits Home.
+                if (this.currentViewId === 'view-home') {
+                    history.pushState(state, '', '');
+                } else {
+                    history.replaceState(state, '', '');
+                }
+                
                 this.showView(viewId);
             },
 
@@ -481,9 +540,16 @@
                 
                 const sjcCard = document.getElementById('cardSjc');
                 const pyqCard = document.getElementById('cardPyq');
+                const auditCard = document.getElementById('cardAuditRevise'); // NEW: Get Audit Card
                 
+                // Toggle SJC Card (For Cost Accounting P8)
                 if (id == '8') sjcCard.classList.remove('hidden'); else sjcCard.classList.add('hidden');
+                
+                // Toggle PYQ Card (For Inter)
                 if (isInter) pyqCard.classList.remove('hidden'); else pyqCard.classList.add('hidden');
+                
+                // Toggle Audit Revision Card (For Audit P10)
+                if (id == '10') auditCard.classList.remove('hidden'); else auditCard.classList.add('hidden');
                 
                 this.navigateTo('view-dashboard', { id, title });
             },
@@ -497,7 +563,14 @@
             openQuizFile(type) {
                 if (!this.selectedPaperId) return;
                 const fileName = `paper${this.selectedPaperId}-${type}.html`;
-                window.location.href = fileName;
+                
+                // ANTI-LOOP LOGIC: 
+                // 1. Mark that we are entering a quiz
+                sessionStorage.setItem('prepogy_quiz_active', 'true');
+                // 2. Replace the current Dashboard state with Home before leaving
+                history.replaceState({ viewId: 'view-home' }, '', window.location.pathname);
+                // 3. Navigate using replace to minimize stack footprint
+                window.location.replace(fileName);
             }
         };
 
