@@ -499,8 +499,17 @@
                 scale: 3, // High quality
                 useCORS: true,
                 backgroundColor: null, // Allow transparent background so our gradient works
+                windowWidth: 1440, // 1. FORCE DESKTOP LAYOUT (Triggers md/lg media queries)
                 onclone: (clonedDoc) => {
                     const clonedCard = clonedDoc.getElementById(`q-${id}`);
+                    
+                    // --- 0. FORCE DESKTOP DIMENSIONS ---
+                    // Crucial for mobile users: Force the card to be wide (900px)
+                    // so the downloaded image looks exactly like the PC version.
+                    clonedCard.style.width = '900px';
+                    clonedCard.style.minWidth = '900px';
+                    clonedCard.style.maxWidth = 'none';
+                    clonedCard.style.margin = '0 auto';
                     
                     // --- 1. FORCE VIBRANT COLORS (REMOVE REVISED STATE) ---
                     // Even if the card is revised (gray), download it in full color
@@ -522,7 +531,7 @@
                     const wrapper = clonedDoc.createElement('div');
                     wrapper.style.backgroundColor = '#ffffff';
                     wrapper.style.borderRadius = '17px'; // Slightly less than card's 20px
-                    wrapper.style.padding = '16px'; // Matches original p-4
+                    wrapper.style.padding = '24px'; // Increased padding for desktop look
                     wrapper.style.height = '100%';
                     wrapper.style.width = '100%';
                     wrapper.style.position = 'relative';
