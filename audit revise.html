@@ -156,6 +156,10 @@
             body.zen-mode .bg-shapes { @apply hidden; }
             body.zen-mode main { @apply max-w-3xl mx-auto; }
             body.zen-mode header { @apply bg-white/95 dark:bg-slate-900/95; }
+
+            /* Drawing Toolbar */
+            .tool-btn { @apply w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm; }
+            .tool-active { @apply ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-slate-800 border-indigo-500; }
         }
     </style>
 </head>
@@ -334,6 +338,14 @@
         let currentFilter = 'all';
         let revisedQuestions = JSON.parse(localStorage.getItem('prepogy_audit_progress')) || [];
         let isZenMode = false;
+        
+        // Drawing State
+        let drawingMode = false;
+        let currentTool = 'highlighter';
+        let currentCanvas = null;
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
 
         // --- DOM Elements ---
         const feed = document.getElementById('questions-feed');
@@ -345,7 +357,7 @@
         
         // --- Initialization ---
         function init() {
-            initTheme(); // Initialize theme preference
+            initTheme(); 
 
             if(!localStorage.getItem('prepogy_audit_visited')) {
                 document.getElementById('introModal').classList.remove('hidden');
@@ -479,6 +491,142 @@
             handleSearch(term);
         }
 
+        // --- Drawing Features ---
+
+        function toggleAnnotation(id) {
+            const card = document.getElementById(`q-${id}`);
+            const canvas = document.getElementById(`canvas-${id}`);
+            const toolbar = document.getElementById(`toolbar-${id}`);
+            
+            if (!canvas.dataset.active || canvas.dataset.active === 'false') {
+                // ACTIVATE Drawing Mode
+                canvas.dataset.active = 'true';
+                toolbar.classList.remove('hidden');
+                canvas.style.pointerEvents = 'auto'; // Enable touch on canvas
+                
+                // Initialize canvas dimensions if not set
+                // We do this every time to match card size if it changed (e.g. answer revealed)
+                const rect = card.getBoundingClientRect();
+                // Set resolution to match physical pixels for sharpness
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                
+                // Setup Context
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                
+                // Add event listeners
+                addDrawingListeners(canvas, id);
+                setTool(id, 'highlighter'); // Default tool
+
+            } else {
+                // DEACTIVATE Drawing Mode
+                canvas.dataset.active = 'false';
+                toolbar.classList.add('hidden');
+                canvas.style.pointerEvents = 'none'; // Allow scrolling/text selection again
+                // Note: We do NOT clear the canvas, so drawings persist while user scrolls away
+            }
+        }
+
+        function setTool(id, tool) {
+            const canvas = document.getElementById(`canvas-${id}`);
+            const ctx = canvas.getContext('2d');
+            const toolbar = document.getElementById(`toolbar-${id}`);
+            
+            // UI Updates
+            const buttons = toolbar.querySelectorAll('.tool-btn');
+            buttons.forEach(b => b.classList.remove('tool-active'));
+            const activeBtn = toolbar.querySelector(`[data-tool="${tool}"]`);
+            if(activeBtn) activeBtn.classList.add('tool-active');
+
+            if (tool === 'clear') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                // Reset to previous tool
+                return;
+            }
+
+            currentTool = tool;
+
+            if (tool === 'highlighter') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = 'rgba(255, 235, 59, 0.4)'; // Transparent Yellow
+                ctx.lineWidth = 20;
+            } else if (tool === 'pen') {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = '#ef4444'; // Red
+                ctx.lineWidth = 3;
+            } else if (tool === 'eraser') {
+                ctx.globalCompositeOperation = 'destination-out'; // Erase
+                ctx.lineWidth = 25;
+            }
+        }
+
+        function addDrawingListeners(canvas, id) {
+            // Remove old listeners to avoid duplicates (naive approach)
+            const newCanvas = canvas.cloneNode(true);
+            canvas.parentNode.replaceChild(newCanvas, canvas);
+            // Re-fetch reference
+            const freshCanvas = document.getElementById(`canvas-${id}`);
+            const ctx = freshCanvas.getContext('2d');
+            
+            // Re-apply current tool settings
+            setTool(id, currentTool); 
+
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            function getPos(e) {
+                const rect = freshCanvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function start(e) {
+                if(e.type === 'touchstart') {
+                   // e.preventDefault(); // Stop scrolling while drawing
+                }
+                isDrawing = true;
+                const pos = getPos(e);
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                if(e.type === 'touchmove') {
+                   e.preventDefault(); // Stop scrolling while drawing
+                }
+                
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+                
+                lastX = pos.x;
+                lastY = pos.y;
+            }
+
+            function stop() {
+                isDrawing = false;
+            }
+
+            freshCanvas.addEventListener('mousedown', start);
+            freshCanvas.addEventListener('mousemove', draw);
+            freshCanvas.addEventListener('mouseup', stop);
+            freshCanvas.addEventListener('mouseout', stop);
+
+            freshCanvas.addEventListener('touchstart', start, {passive: false});
+            freshCanvas.addEventListener('touchmove', draw, {passive: false});
+            freshCanvas.addEventListener('touchend', stop);
+        }
+
         function toggleRevision(id) {
             const index = revisedQuestions.indexOf(id);
             if (index > -1) {
@@ -534,6 +682,9 @@
                     fileName = `Prepogy_${safeTopic}.png`;
                 }
             }
+            
+            // Get original canvas source if drawing exists
+            const sourceCanvas = document.getElementById(`canvas-${id}`);
 
             html2canvas(element, {
                 scale: 3, 
@@ -551,7 +702,6 @@
                     clonedCard.style.margin = '0 auto';
                     
                     // FORCE LIGHT MODE FOR DOWNLOAD
-                    // Since screenshots should look like the standard card regardless of user theme
                     clonedCard.style.setProperty('--card-bg', '#ffffff');
                     
                     clonedCard.classList.remove('revised');
@@ -564,7 +714,7 @@
                     clonedCard.style.border = 'none'; 
                     clonedCard.style.boxShadow = 'none';
                     
-                    // Reset Text Colors for Download (in case Dark Mode was active)
+                    // Reset Text Colors for Download
                     const title = clonedCard.querySelector('h3');
                     if(title) {
                         title.classList.remove('text-slate-800', 'dark:text-slate-100');
@@ -582,13 +732,34 @@
                     wrapper.style.display = 'flex';
                     wrapper.style.flexDirection = 'column';
 
+                    // MOVE CHILDREN (Including Canvas Container)
                     while (clonedCard.firstChild) {
                         wrapper.appendChild(clonedCard.firstChild);
                     }
                     clonedCard.appendChild(wrapper);
 
+                    // --- DRAWING LAYER CAPTURE ---
+                    // The cloned canvas is empty. We must copy the pixels from the source.
+                    const clonedCanvas = wrapper.querySelector(`#canvas-${id}`);
+                    if (sourceCanvas && clonedCanvas) {
+                        clonedCanvas.width = sourceCanvas.width;
+                        clonedCanvas.height = sourceCanvas.height;
+                        const destCtx = clonedCanvas.getContext('2d');
+                        destCtx.drawImage(sourceCanvas, 0, 0);
+                        // Ensure it's visible in the clone
+                        clonedCanvas.style.display = 'block';
+                        clonedCanvas.style.position = 'absolute';
+                        clonedCanvas.style.top = '0';
+                        clonedCanvas.style.left = '0';
+                        clonedCanvas.style.zIndex = '50';
+                    }
+
+                    // HIDE UI ELEMENTS
                     const actionBtns = wrapper.querySelector('.action-buttons');
                     if (actionBtns) actionBtns.style.display = 'none';
+                    
+                    const toolbar = wrapper.querySelector(`#toolbar-${id}`);
+                    if (toolbar) toolbar.style.display = 'none';
 
                     const toggleBtn = wrapper.querySelector(`#btn-${id}`);
                     if (toggleBtn) toggleBtn.style.display = 'none';
@@ -600,9 +771,7 @@
                         answerDiv.style.opacity = '1';
                         answerDiv.style.transform = 'none';
                         answerDiv.style.display = 'block';
-                        // Ensure answer text is dark for the image
                         answerDiv.style.color = '#334155'; // slate-700
-                        // Remove dark mode prose inversion if present
                         const proseContent = answerDiv.querySelector('.answer-content');
                         if(proseContent) {
                             proseContent.classList.remove('prose-invert');
@@ -668,7 +837,11 @@
                 
                 htmlContent += `
                 <article id="q-${item.id}" class="card-question ${isRevised ? 'revised' : ''} animate-fade-in-up" style="animation-delay: ${Math.min(index * 0.05, 1)}s">
-                    <div class="flex flex-wrap items-start justify-between gap-4 mb-2">
+                    
+                    <!-- DRAWING LAYER (Covering entire card) -->
+                    <canvas id="canvas-${item.id}" class="absolute inset-0 z-20 pointer-events-none w-full h-full" data-active="false"></canvas>
+
+                    <div class="flex flex-wrap items-start justify-between gap-4 mb-2 relative z-30">
                         <div class="flex flex-col gap-1">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span class="px-2 py-0.5 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest rounded shadow-sm">Important</span>
@@ -679,6 +852,13 @@
                         </div>
                         
                         <div class="flex gap-2 action-buttons">
+                            <!-- Draw Button -->
+                            <button onclick="toggleAnnotation(${item.id})" 
+                                    class="w-8 h-8 rounded-full border bg-white dark:bg-slate-700 text-slate-400 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-600 flex items-center justify-center transition-all shadow-sm"
+                                    title="Draw / Mark" aria-label="Annotate Question">
+                                <i class="fas fa-pen text-sm"></i>
+                            </button>
+
                             <button id="download-btn-${item.id}" onclick="downloadCard(${item.id})" 
                                     class="w-8 h-8 rounded-full border bg-white dark:bg-slate-700 text-slate-400 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-600 flex items-center justify-center transition-all shadow-sm"
                                     title="Download Card Image" aria-label="Download Question">
@@ -692,23 +872,34 @@
                         </div>
                     </div>
                     
-                    <div class="flex gap-4 items-start mb-3">
+                    <div class="flex gap-4 items-start mb-3 relative z-10">
                         <h3 class="text-sm md:text-base font-bold text-slate-800 dark:text-slate-100 leading-snug">${item.question}</h3>
                     </div>
 
                     <button id="btn-${item.id}" onclick="toggleSolution(${item.id})" 
-                            class="w-auto px-6 py-1 mx-auto rounded-full text-[9px] font-black uppercase tracking-widest transition-all bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white hover:shadow-sm border border-indigo-100 dark:border-slate-600 flex items-center justify-center group mt-2" aria-label="Toggle Answer">
+                            class="w-auto px-6 py-1 mx-auto rounded-full text-[9px] font-black uppercase tracking-widest transition-all bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white hover:shadow-sm border border-indigo-100 dark:border-slate-600 flex items-center justify-center group mt-2 relative z-30" aria-label="Toggle Answer">
                         <span class="group-hover:hidden flex items-center"><i class="fas fa-book-open mr-2"></i> View Answer</span>
                         <span class="hidden group-hover:flex items-center"><i class="fas fa-eye mr-2"></i> Reveal</span>
                     </button>
 
-                    <div id="answer-${item.id}" class="hidden card-answer animate-fade-in-up">
+                    <div id="answer-${item.id}" class="hidden card-answer animate-fade-in-up relative z-10">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-6 h-6 bg-emerald-500 text-white rounded flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-align-left"></i></div>
                             <h4 class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Full Explanation</h4>
                         </div>
                         <div class="answer-content prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-xs md:text-sm">${item.answer}</div>
                     </div>
+
+                    <!-- DRAWING TOOLBAR (Hidden by default) -->
+                    <div id="toolbar-${item.id}" class="hidden absolute bottom-4 right-4 z-40 flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-full shadow-lg border border-slate-200 dark:border-slate-600 animate-fade-in-up">
+                        <button onclick="setTool(${item.id}, 'highlighter')" class="tool-btn bg-yellow-100 text-yellow-600 tool-active" data-tool="highlighter" title="Highlighter"><i class="fas fa-highlighter"></i></button>
+                        <button onclick="setTool(${item.id}, 'pen')" class="tool-btn bg-red-50 text-red-500" data-tool="pen" title="Red Pen"><i class="fas fa-pen"></i></button>
+                        <button onclick="setTool(${item.id}, 'eraser')" class="tool-btn bg-slate-100 text-slate-600" data-tool="eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
+                        <button onclick="setTool(${item.id}, 'clear')" class="tool-btn bg-slate-100 text-red-500" data-tool="clear" title="Clear All"><i class="fas fa-trash"></i></button>
+                        <div class="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1 self-center"></div>
+                        <button onclick="toggleAnnotation(${item.id})" class="tool-btn bg-indigo-50 text-indigo-600" title="Done"><i class="fas fa-check"></i></button>
+                    </div>
+
                 </article>`;
 
                 if (ENABLE_ADS && (index + 1) % 4 === 0 && index !== data.length - 1) {
