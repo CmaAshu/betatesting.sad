@@ -492,6 +492,50 @@
         }
 
         // --- Drawing Features ---
+        
+        // NEW: Save canvas to localStorage
+        function saveDrawing(id) {
+            const canvas = document.getElementById(`canvas-${id}`);
+            if(canvas) {
+                try {
+                    const dataURL = canvas.toDataURL();
+                    localStorage.setItem(`prepogy_drawing_${id}`, dataURL);
+                } catch (e) {
+                    console.warn('Storage quota exceeded or error saving drawing');
+                }
+            }
+        }
+
+        // NEW: Load drawing from localStorage
+        function loadDrawing(id) {
+            const canvas = document.getElementById(`canvas-${id}`);
+            const card = document.getElementById(`q-${id}`);
+            const data = localStorage.getItem(`prepogy_drawing_${id}`);
+
+            if (canvas && card) {
+                // Ensure canvas resolution matches visual size (critical for sharpness)
+                const rect = card.getBoundingClientRect();
+                
+                // Only reset/resize if dimensions have actually changed to avoid flickering
+                // or if we have data to load which requires a specific context size
+                if (canvas.width !== rect.width || canvas.height !== rect.height) {
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+                }
+
+                if (data) {
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    img.onload = () => {
+                        // Clear before redrawing to avoid duplicates if called multiple times
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        // Draw image stretched to fit current canvas size (responsive fix)
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    };
+                    img.src = data;
+                }
+            }
+        }
 
         function toggleAnnotation(id) {
             const card = document.getElementById(`q-${id}`);
@@ -502,30 +546,30 @@
                 // ACTIVATE Drawing Mode
                 canvas.dataset.active = 'true';
                 toolbar.classList.remove('hidden');
-                canvas.style.pointerEvents = 'auto'; // Enable touch on canvas
+                canvas.style.pointerEvents = 'auto'; 
                 
-                // Initialize canvas dimensions if not set
-                // We do this every time to match card size if it changed (e.g. answer revealed)
+                // CRITICAL: Resizing clears the canvas. We must Resize THEN Reload data.
                 const rect = card.getBoundingClientRect();
-                // Set resolution to match physical pixels for sharpness
                 canvas.width = rect.width;
                 canvas.height = rect.height;
+                
+                // Reload data immediately to restore what was there (if any)
+                loadDrawing(id);
                 
                 // Setup Context
                 const ctx = canvas.getContext('2d');
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 
-                // Add event listeners
                 addDrawingListeners(canvas, id);
-                setTool(id, 'highlighter'); // Default tool
+                setTool(id, currentTool || 'highlighter'); 
 
             } else {
                 // DEACTIVATE Drawing Mode
                 canvas.dataset.active = 'false';
                 toolbar.classList.add('hidden');
-                canvas.style.pointerEvents = 'none'; // Allow scrolling/text selection again
-                // Note: We do NOT clear the canvas, so drawings persist while user scrolls away
+                canvas.style.pointerEvents = 'none'; 
+                // We do NOT clear canvas here so marks remain visible
             }
         }
 
@@ -534,7 +578,6 @@
             const ctx = canvas.getContext('2d');
             const toolbar = document.getElementById(`toolbar-${id}`);
             
-            // UI Updates
             const buttons = toolbar.querySelectorAll('.tool-btn');
             buttons.forEach(b => b.classList.remove('tool-active'));
             const activeBtn = toolbar.querySelector(`[data-tool="${tool}"]`);
@@ -542,7 +585,7 @@
 
             if (tool === 'clear') {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Reset to previous tool
+                localStorage.removeItem(`prepogy_drawing_${id}`); // Remove from storage
                 return;
             }
 
@@ -550,27 +593,24 @@
 
             if (tool === 'highlighter') {
                 ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = 'rgba(255, 235, 59, 0.4)'; // Transparent Yellow
+                ctx.strokeStyle = 'rgba(255, 235, 59, 0.4)'; 
                 ctx.lineWidth = 20;
             } else if (tool === 'pen') {
                 ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = '#ef4444'; // Red
+                ctx.strokeStyle = '#ef4444'; 
                 ctx.lineWidth = 3;
             } else if (tool === 'eraser') {
-                ctx.globalCompositeOperation = 'destination-out'; // Erase
+                ctx.globalCompositeOperation = 'destination-out'; 
                 ctx.lineWidth = 25;
             }
         }
 
         function addDrawingListeners(canvas, id) {
-            // Remove old listeners to avoid duplicates (naive approach)
             const newCanvas = canvas.cloneNode(true);
             canvas.parentNode.replaceChild(newCanvas, canvas);
-            // Re-fetch reference
             const freshCanvas = document.getElementById(`canvas-${id}`);
             const ctx = freshCanvas.getContext('2d');
             
-            // Re-apply current tool settings
             setTool(id, currentTool); 
 
             let isDrawing = false;
@@ -588,9 +628,6 @@
             }
 
             function start(e) {
-                if(e.type === 'touchstart') {
-                   // e.preventDefault(); // Stop scrolling while drawing
-                }
                 isDrawing = true;
                 const pos = getPos(e);
                 lastX = pos.x;
@@ -600,7 +637,7 @@
             function draw(e) {
                 if (!isDrawing) return;
                 if(e.type === 'touchmove') {
-                   e.preventDefault(); // Stop scrolling while drawing
+                   e.preventDefault(); 
                 }
                 
                 const pos = getPos(e);
@@ -614,7 +651,10 @@
             }
 
             function stop() {
-                isDrawing = false;
+                if (isDrawing) {
+                    isDrawing = false;
+                    saveDrawing(id); // <--- AUTO SAVE ON STROKE END
+                }
             }
 
             freshCanvas.addEventListener('mousedown', start);
@@ -627,365 +667,41 @@
             freshCanvas.addEventListener('touchend', stop);
         }
 
-        function toggleRevision(id) {
-            const index = revisedQuestions.indexOf(id);
-            if (index > -1) {
-                revisedQuestions.splice(index, 1); 
-            } else {
-                revisedQuestions.push(id); 
-            }
-            localStorage.setItem('prepogy_audit_progress', JSON.stringify(revisedQuestions));
-            
-            const card = document.getElementById(`q-${id}`);
-            const btn = document.getElementById(`rev-btn-${id}`);
-            const icon = btn.querySelector('i');
-            
-            if (revisedQuestions.includes(id)) {
-                card.classList.add('revised');
-                btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-500');
-                btn.classList.remove('bg-white', 'text-slate-400', 'border-slate-300', 'hover:border-emerald-500', 'hover:text-emerald-600', 'hover:bg-emerald-50');
-                icon.className = 'fas fa-check text-sm';
-            } else {
-                card.classList.remove('revised');
-                btn.classList.remove('bg-emerald-500', 'text-white', 'border-emerald-500');
-                btn.classList.add('bg-white', 'text-slate-400', 'border-slate-300', 'hover:border-emerald-500', 'hover:text-emerald-600', 'hover:bg-emerald-50');
-                icon.className = 'fas fa-check text-sm';
-            }
-            updateProgressUI();
-        }
+        // ... existing toggleRevision function ...
 
-        function updateProgressUI() {
-            const total = auditData.length;
-            const revised = revisedQuestions.length;
-            const pct = total === 0 ? 0 : Math.round((revised / total) * 100);
-            
-            document.getElementById('progress-percent').innerText = `${pct}%`;
-            document.getElementById('sidebar-progress-bar').style.width = `${pct}%`;
-            document.getElementById('progress-text').innerText = `${revised}/${total} Questions Revised`;
-        }
+        // ... existing updateProgressUI function ...
 
-        function downloadCard(id) {
-            const element = document.getElementById(`q-${id}`);
-            const btn = document.getElementById(`download-btn-${id}`);
-            
-            if (btn.getAttribute('data-processing') === 'true') return;
-            
-            const originalContent = btn.innerHTML;
-            btn.setAttribute('data-processing', 'true');
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-            let fileName = `Prepogy_Audit_Q${id}.png`;
-            if (typeof auditData !== 'undefined') {
-                const item = auditData.find(x => x.id === id);
-                if (item && item.topic) {
-                    const safeTopic = item.topic.replace(/[^a-zA-Z0-9\-\s]/g, '').trim().replace(/\s+/g, '_');
-                    fileName = `Prepogy_${safeTopic}.png`;
-                }
-            }
-            
-            // Get original canvas source if drawing exists
-            const sourceCanvas = document.getElementById(`canvas-${id}`);
-
-            html2canvas(element, {
-                scale: 3, 
-                useCORS: true,
-                backgroundColor: null, 
-                windowWidth: 1440,
-                logging: false, 
-                onclone: (clonedDoc) => {
-                    const clonedCard = clonedDoc.getElementById(`q-${id}`);
-                    
-                    // Force desktop rendering
-                    clonedCard.style.width = '900px';
-                    clonedCard.style.minWidth = '900px';
-                    clonedCard.style.maxWidth = 'none';
-                    clonedCard.style.margin = '0 auto';
-                    
-                    // FORCE LIGHT MODE FOR DOWNLOAD
-                    clonedCard.style.setProperty('--card-bg', '#ffffff');
-                    
-                    clonedCard.classList.remove('revised');
-                    clonedCard.style.opacity = '1';
-                    clonedCard.style.filter = 'none';
-
-                    // Manually set background for compatibility
-                    clonedCard.style.backgroundImage = 'linear-gradient(white, white), linear-gradient(135deg, #6366f1, #a855f7)';
-                    clonedCard.style.padding = '3px'; 
-                    clonedCard.style.border = 'none'; 
-                    clonedCard.style.boxShadow = 'none';
-                    
-                    // Reset Text Colors for Download
-                    const title = clonedCard.querySelector('h3');
-                    if(title) {
-                        title.classList.remove('text-slate-800', 'dark:text-slate-100');
-                        title.style.color = '#1e293b'; // Force slate-800
-                    }
-
-                    const wrapper = clonedDoc.createElement('div');
-                    wrapper.style.backgroundColor = '#ffffff';
-                    wrapper.style.borderRadius = '17px'; 
-                    wrapper.style.padding = '24px'; 
-                    wrapper.style.height = '100%';
-                    wrapper.style.width = '100%';
-                    wrapper.style.position = 'relative';
-                    wrapper.style.zIndex = '10';
-                    wrapper.style.display = 'flex';
-                    wrapper.style.flexDirection = 'column';
-
-                    // MOVE CHILDREN (Including Canvas Container)
-                    while (clonedCard.firstChild) {
-                        wrapper.appendChild(clonedCard.firstChild);
-                    }
-                    clonedCard.appendChild(wrapper);
-
-                    // --- DRAWING LAYER CAPTURE ---
-                    // The cloned canvas is empty. We must copy the pixels from the source.
-                    const clonedCanvas = wrapper.querySelector(`#canvas-${id}`);
-                    if (sourceCanvas && clonedCanvas) {
-                        clonedCanvas.width = sourceCanvas.width;
-                        clonedCanvas.height = sourceCanvas.height;
-                        const destCtx = clonedCanvas.getContext('2d');
-                        destCtx.drawImage(sourceCanvas, 0, 0);
-                        // Ensure it's visible in the clone
-                        clonedCanvas.style.display = 'block';
-                        clonedCanvas.style.position = 'absolute';
-                        clonedCanvas.style.top = '0';
-                        clonedCanvas.style.left = '0';
-                        clonedCanvas.style.zIndex = '50';
-                    }
-
-                    // HIDE UI ELEMENTS
-                    const actionBtns = wrapper.querySelector('.action-buttons');
-                    if (actionBtns) actionBtns.style.display = 'none';
-                    
-                    const toolbar = wrapper.querySelector(`#toolbar-${id}`);
-                    if (toolbar) toolbar.style.display = 'none';
-
-                    const toggleBtn = wrapper.querySelector(`#btn-${id}`);
-                    if (toggleBtn) toggleBtn.style.display = 'none';
-
-                    const answerDiv = wrapper.querySelector(`#answer-${id}`);
-                    if (answerDiv) {
-                        answerDiv.classList.remove('hidden');
-                        answerDiv.classList.remove('animate-fade-in-up'); 
-                        answerDiv.style.opacity = '1';
-                        answerDiv.style.transform = 'none';
-                        answerDiv.style.display = 'block';
-                        answerDiv.style.color = '#334155'; // slate-700
-                        const proseContent = answerDiv.querySelector('.answer-content');
-                        if(proseContent) {
-                            proseContent.classList.remove('prose-invert');
-                            proseContent.style.color = '#334155';
-                        }
-                    }
-
-                    const watermark = clonedDoc.createElement('div');
-                    watermark.innerText = 'PREPOGY.IN';
-                    Object.assign(watermark.style, {
-                        position: 'absolute',
-                        top: '15px',
-                        right: '20px',
-                        fontSize: '16px',
-                        fontWeight: '800',
-                        color: '#000000', 
-                        opacity: '1',
-                        zIndex: '0',
-                        pointerEvents: 'none',
-                        fontFamily: 'Poppins, sans-serif'
-                    });
-                    wrapper.appendChild(watermark);
-                }
-            }).then(canvas => {
-                canvas.toBlob(function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.download = fileName;
-                    link.href = url;
-                    document.body.appendChild(link);
-                    link.click();
-                    
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                    
-                    btn.innerHTML = originalContent;
-                    btn.removeAttribute('data-processing');
-                    canvas.remove();
-                }, 'image/png', 1.0);
-            }).catch(err => {
-                console.error(err);
-                btn.innerHTML = originalContent;
-                btn.removeAttribute('data-processing');
-                alert('Download failed. Please try again.');
-            });
-        }
+        // ... existing downloadCard function ...
 
         function renderFeed(data) {
-            if (data.length === 0) {
-                feed.innerHTML = `
-                    <div class="text-center py-20 animate-fade-in-up">
-                        <i class="fas fa-search text-4xl text-slate-200 dark:text-slate-700 mb-4"></i>
-                        <h4 class="text-lg font-bold text-slate-400 dark:text-slate-600">No matching questions found</h4>
-                    </div>
-                `;
-                return;
-            }
-
-            let htmlContent = '';
+            // ... existing renderFeed code (generating htmlContent) ...
             
-            data.forEach((item, index) => {
-                const isRevised = revisedQuestions.includes(item.id);
-                
-                htmlContent += `
-                <article id="q-${item.id}" class="card-question ${isRevised ? 'revised' : ''} animate-fade-in-up" style="animation-delay: ${Math.min(index * 0.05, 1)}s">
-                    
-                    <!-- DRAWING LAYER (Covering entire card) -->
-                    <canvas id="canvas-${item.id}" class="absolute inset-0 z-20 pointer-events-none w-full h-full" data-active="false"></canvas>
-
-                    <div class="flex flex-wrap items-start justify-between gap-4 mb-2 relative z-30">
-                        <div class="flex flex-col gap-1">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="px-2 py-0.5 bg-indigo-600 text-white text-[9px] font-black uppercase tracking-widest rounded shadow-sm">Important</span>
-                                <span class="px-2 py-0.5 bg-slate-50 dark:bg-slate-700 text-slate-500 dark:text-slate-300 text-[9px] font-black uppercase tracking-widest rounded border border-slate-100 dark:border-slate-600">${item.section}</span>
-                                ${item.meta ? `<span class="px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-[9px] font-black uppercase tracking-widest rounded border border-amber-100 dark:border-amber-800 flex items-center gap-1"><i class="far fa-clock text-[8px]"></i>${item.meta}</span>` : ''}
-                            </div>
-                            <span class="text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest pl-0.5">${item.topic}</span>
-                        </div>
-                        
-                        <div class="flex gap-2 action-buttons">
-                            <!-- Draw Button -->
-                            <button onclick="toggleAnnotation(${item.id})" 
-                                    class="w-8 h-8 rounded-full border bg-white dark:bg-slate-700 text-slate-400 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-600 flex items-center justify-center transition-all shadow-sm"
-                                    title="Draw / Mark" aria-label="Annotate Question">
-                                <i class="fas fa-pen text-sm"></i>
-                            </button>
-
-                            <button id="download-btn-${item.id}" onclick="downloadCard(${item.id})" 
-                                    class="w-8 h-8 rounded-full border bg-white dark:bg-slate-700 text-slate-400 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-slate-600 flex items-center justify-center transition-all shadow-sm"
-                                    title="Download Card Image" aria-label="Download Question">
-                                <i class="fas fa-download text-sm"></i>
-                            </button>
-                            <button id="rev-btn-${item.id}" onclick="toggleRevision(${item.id})" 
-                                    class="w-8 h-8 rounded-full border flex items-center justify-center transition-all shadow-sm group ${isRevised ? 'bg-emerald-500 text-white border-emerald-500' : 'bg-white dark:bg-slate-700 text-slate-400 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:border-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-slate-600'}"
-                                    title="Mark as Revised" aria-label="Mark as Revised">
-                                <i class="fas fa-check text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4 items-start mb-3 relative z-10">
-                        <h3 class="text-sm md:text-base font-bold text-slate-800 dark:text-slate-100 leading-snug">${item.question}</h3>
-                    </div>
-
-                    <button id="btn-${item.id}" onclick="toggleSolution(${item.id})" 
-                            class="w-auto px-6 py-1 mx-auto rounded-full text-[9px] font-black uppercase tracking-widest transition-all bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 hover:bg-indigo-600 hover:text-white hover:shadow-sm border border-indigo-100 dark:border-slate-600 flex items-center justify-center group mt-2 relative z-30" aria-label="Toggle Answer">
-                        <span class="group-hover:hidden flex items-center"><i class="fas fa-book-open mr-2"></i> View Answer</span>
-                        <span class="hidden group-hover:flex items-center"><i class="fas fa-eye mr-2"></i> Reveal</span>
-                    </button>
-
-                    <div id="answer-${item.id}" class="hidden card-answer animate-fade-in-up relative z-10">
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="w-6 h-6 bg-emerald-500 text-white rounded flex items-center justify-center text-[10px] shadow-sm"><i class="fas fa-align-left"></i></div>
-                            <h4 class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Full Explanation</h4>
-                        </div>
-                        <div class="answer-content prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-xs md:text-sm">${item.answer}</div>
-                    </div>
-
-                    <!-- DRAWING TOOLBAR (Hidden by default) -->
-                    <div id="toolbar-${item.id}" class="hidden absolute bottom-4 right-4 z-40 flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-full shadow-lg border border-slate-200 dark:border-slate-600 animate-fade-in-up">
-                        <button onclick="setTool(${item.id}, 'highlighter')" class="tool-btn bg-yellow-100 text-yellow-600 tool-active" data-tool="highlighter" title="Highlighter"><i class="fas fa-highlighter"></i></button>
-                        <button onclick="setTool(${item.id}, 'pen')" class="tool-btn bg-red-50 text-red-500" data-tool="pen" title="Red Pen"><i class="fas fa-pen"></i></button>
-                        <button onclick="setTool(${item.id}, 'eraser')" class="tool-btn bg-slate-100 text-slate-600" data-tool="eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
-                        <button onclick="setTool(${item.id}, 'clear')" class="tool-btn bg-slate-100 text-red-500" data-tool="clear" title="Clear All"><i class="fas fa-trash"></i></button>
-                        <div class="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1 self-center"></div>
-                        <button onclick="toggleAnnotation(${item.id})" class="tool-btn bg-indigo-50 text-indigo-600" title="Done"><i class="fas fa-check"></i></button>
-                    </div>
-
-                </article>`;
-
-                if (ENABLE_ADS && (index + 1) % 4 === 0 && index !== data.length - 1) {
-                    htmlContent += `
-                        <div class="ad-container max-w-4xl mx-auto my-4" style="display: flex;">
-                            <span class="ad-label">Advertisement</span>
-                            <ins class="adsbygoogle"
-                                 style="display:block; width: 100%;"
-                                 data-ad-client="ca-pub-7792469883739877"
-                                 data-ad-slot="1234567890" 
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
-                        </div>`;
-                }
-            });
-
             feed.innerHTML = htmlContent;
 
+            // NEW: Load drawings for all rendered cards
+            setTimeout(() => {
+                data.forEach(item => {
+                    loadDrawing(item.id);
+                });
+            }, 100); // Slight delay to ensure DOM is ready
+
             if (ENABLE_ADS) {
-                setTimeout(() => {
-                    try {
-                        const ads = feed.querySelectorAll('.adsbygoogle');
-                        ads.forEach(ad => {
-                            if (!ad.getAttribute('data-adsbygoogle-status')) {
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            }
-                        });
-                    } catch(e) { console.log('AdSense init error:', e); }
-                }, 100);
+                // ... existing ad code ...
             }
         }
-
-        function renderTOC(data) {
-            const tocHTML = data.map(item => `
-                <button onclick="jumpToQuestion(${item.id})" class="toc-item group">
-                    <span class="opacity-40 group-hover:opacity-100 mr-2 text-[9px]">${item.id}.</span> ${item.topic}
-                </button>
-            `).join('');
-            
-            sidebarTOC.innerHTML = tocHTML;
-            mobileTOC.innerHTML = tocHTML;
-
-            if (data.length === 0) {
-                sidebarTOC.innerHTML = '<p class="text-[10px] text-slate-400 dark:text-slate-500 px-4">No results</p>';
-                mobileTOC.innerHTML = '<p class="text-[10px] text-slate-400 dark:text-slate-500 px-4">No results</p>';
-            }
-        }
-
-        function jumpToQuestion(id) {
-            scrollToId(id);
-            document.getElementById('mobile-toc-overlay').classList.add('hidden');
-        }
-
-        function scrollToId(id) {
-            const element = document.getElementById(`q-${id}`);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                const highlightClasses = ['ring-4', 'ring-emerald-500', 'ring-offset-4', 'dark:ring-offset-slate-900', 'scale-[1.02]', 'shadow-[0_0_35px_rgba(16,185,129,0.6)]', 'z-20'];
-                
-                element.classList.add(...highlightClasses);
-                
-                setTimeout(() => {
-                    element.classList.remove(...highlightClasses);
-                }, 2500);
-            }
-        }
-
-        function toggleSolution(id) {
-            const content = document.getElementById(`answer-${id}`);
-            const btn = document.getElementById(`btn-${id}`);
-            const isHidden = content.classList.contains('hidden');
-            
-            if (isHidden) {
-                content.classList.remove('hidden');
-                btn.innerHTML = `<i class="fas fa-eye-slash mr-2"></i> Hide Answer`;
-                btn.classList.add('bg-slate-800', 'text-white', 'border-slate-800');
-                btn.classList.remove('bg-indigo-50', 'text-indigo-600', 'dark:bg-slate-700', 'dark:text-indigo-300');
-                content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            } else {
-                content.classList.add('hidden');
-                btn.innerHTML = `<i class="fas fa-book-open mr-2"></i> View Answer`;
-                btn.classList.remove('bg-slate-800', 'text-white', 'border-slate-800');
-                btn.classList.add('bg-indigo-50', 'text-indigo-600', 'dark:bg-slate-700', 'dark:text-indigo-300');
-            }
-        }
+        
+        // ... existing rest of the code ...
+        
+        // NEW: Reload drawings on window resize (to handle orientation changes)
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if(typeof auditData !== 'undefined') {
+                    auditData.forEach(item => loadDrawing(item.id));
+                }
+            }, 300);
+        });
 
         window.onload = init;
     </script>
