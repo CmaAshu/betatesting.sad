@@ -164,6 +164,16 @@
 </head>
 <body class="font-sans bg-slate-50 dark:bg-slate-900 text-gray-800 dark:text-slate-100 overflow-x-hidden antialiased scroll-smooth flex flex-col h-screen transition-colors duration-300">
 
+    <!-- GLOBAL DRAWING TOOLBAR (Fixed to viewport) -->
+    <div id="global-drawing-toolbar" class="hidden fixed top-24 right-4 z-[100] flex flex-col gap-2 bg-white dark:bg-slate-800 p-2 rounded-full shadow-2xl border border-slate-200 dark:border-slate-600 animate-fade-in-up">
+        <button onclick="setGlobalTool('highlighter')" class="tool-btn bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 tool-active" data-tool="highlighter" title="Highlighter"><i class="fas fa-highlighter"></i></button>
+        <button onclick="setGlobalTool('pen')" class="tool-btn bg-red-50 dark:bg-red-900/20 text-red-500" data-tool="pen" title="Red Pen"><i class="fas fa-pen"></i></button>
+        <button onclick="setGlobalTool('eraser')" class="tool-btn bg-slate-100 dark:bg-slate-700 text-slate-600" data-tool="eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
+        <button onclick="setGlobalTool('clear')" class="tool-btn bg-slate-100 dark:bg-slate-700 text-red-500" data-tool="clear" title="Clear All"><i class="fas fa-trash"></i></button>
+        <div class="h-px w-6 bg-slate-300 dark:bg-slate-600 my-1 self-center"></div>
+        <button onclick="closeAnnotation()" class="tool-btn bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400" title="Done"><i class="fas fa-check"></i></button>
+    </div>
+
     <!-- Progress Bar (Sticky) -->
     <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
         <div id="reading-progress" class="h-full bg-gradient-to-r from-emerald-400 to-indigo-600 w-0 transition-all duration-300"></div>
@@ -340,6 +350,7 @@
         
         // Drawing State
         let currentTool = 'highlighter';
+        let activeCardId = null; // Tracks which card is currently being edited
 
         // --- DOM Elements ---
         const feed = document.getElementById('questions-feed');
@@ -348,6 +359,7 @@
         const searchInput = document.getElementById('search-input');
         const topicPillsContainer = document.getElementById('topic-pills');
         const contentArea = document.getElementById('content-area');
+        const globalToolbar = document.getElementById('global-drawing-toolbar');
         
         // --- Initialization ---
         function init() {
@@ -525,56 +537,67 @@
             }
         }
 
+        function closeAnnotation() {
+            if (activeCardId) {
+                const prevCanvas = document.getElementById(`canvas-${activeCardId}`);
+                if (prevCanvas) {
+                    prevCanvas.dataset.active = 'false';
+                    prevCanvas.style.pointerEvents = 'none';
+                }
+                activeCardId = null;
+            }
+            globalToolbar.classList.add('hidden');
+        }
+
         function toggleAnnotation(id) {
+            // Close existing if open
+            if (activeCardId && activeCardId !== id) {
+               closeAnnotation();
+            }
+
             const card = document.getElementById(`q-${id}`);
             const canvas = document.getElementById(`canvas-${id}`);
-            const toolbar = document.getElementById(`toolbar-${id}`);
             
             const isActive = canvas.dataset.active === 'true';
 
             if (!isActive) {
                 // ACTIVATE Drawing Mode
+                activeCardId = id;
                 canvas.dataset.active = 'true';
-                toolbar.classList.remove('hidden');
-                canvas.style.pointerEvents = 'auto'; // Enable interactions
+                globalToolbar.classList.remove('hidden');
+                canvas.style.pointerEvents = 'auto'; 
                 
-                // IMPORTANT: Ensure canvas size matches card size on open
-                // This prevents blurriness or mismatch if window resized while closed
+                // Ensure size matches
                 const rect = card.getBoundingClientRect();
                 if (canvas.width !== rect.width || canvas.height !== rect.height) {
                     canvas.width = rect.width;
                     canvas.height = rect.height;
-                    // RELOAD data after resize (resize clears context)
                     loadDrawing(id);
                 }
                 
-                // Add listeners if not already added
                 addDrawingListeners(canvas, id);
-                
-                // Set default tool
-                setTool(id, currentTool || 'highlighter'); 
+                setGlobalTool(currentTool || 'highlighter'); 
 
             } else {
-                // DEACTIVATE Drawing Mode
-                canvas.dataset.active = 'false';
-                toolbar.classList.add('hidden');
-                canvas.style.pointerEvents = 'none'; // Passthrough to text
+                // DEACTIVATE
+                closeAnnotation();
             }
         }
 
-        function setTool(id, tool) {
-            const canvas = document.getElementById(`canvas-${id}`);
+        function setGlobalTool(tool) {
+            if (!activeCardId) return;
+            const canvas = document.getElementById(`canvas-${activeCardId}`);
             const ctx = canvas.getContext('2d');
-            const toolbar = document.getElementById(`toolbar-${id}`);
             
-            const buttons = toolbar.querySelectorAll('.tool-btn');
+            // UI Updates
+            const buttons = globalToolbar.querySelectorAll('.tool-btn');
             buttons.forEach(b => b.classList.remove('tool-active'));
-            const activeBtn = toolbar.querySelector(`[data-tool="${tool}"]`);
+            const activeBtn = globalToolbar.querySelector(`[data-tool="${tool}"]`);
             if(activeBtn) activeBtn.classList.add('tool-active');
 
             if (tool === 'clear') {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                localStorage.removeItem(`prepogy_drawing_${id}`); 
+                localStorage.removeItem(`prepogy_drawing_${activeCardId}`); 
                 return;
             }
 
@@ -595,7 +618,6 @@
         }
 
         function addDrawingListeners(canvas, id) {
-            // SINGLE ATTACHMENT CHECK
             if (canvas.dataset.hasListeners === 'true') return;
             canvas.dataset.hasListeners = 'true';
 
@@ -615,23 +637,16 @@
             }
 
             function start(e) {
-                // Allow multi-touch (scrolling/zooming) - IGNORE DRAWING
+                // IGNORE Multi-touch (scrolling)
                 if (e.touches && e.touches.length > 1) {
                     isDrawing = false;
                     return;
                 }
-
-                // Prevent scrolling for single touch (drawing)
-                if(e.type === 'touchstart') {
-                   e.preventDefault(); 
-                }
                 
-                // Only allow drawing if mode is active
                 if (canvas.dataset.active !== 'true') return;
                 
-                // Initialize context properties on start to ensure tool is correct
-                // (Context props can be lost on resize)
-                setTool(id, currentTool); 
+                // Set context again just in case
+                setGlobalTool(currentTool); 
 
                 isDrawing = true;
                 const pos = getPos(e);
@@ -640,13 +655,17 @@
             }
 
             function draw(e) {
-                if (!isDrawing) return;
-                
-                // Allow multi-touch to scroll
-                if (e.touches && e.touches.length > 1) return;
+                // If user uses 2 fingers, ABORT drawing immediately to allow scroll
+                if (e.touches && e.touches.length > 1) {
+                    isDrawing = false;
+                    return;
+                }
 
-                if(e.type === 'touchmove') {
-                   e.preventDefault(); // Stop scrolling while drawing with 1 finger
+                if (!isDrawing) return;
+
+                // Stop scrolling ONLY if drawing with 1 finger
+                if(e.cancelable) {
+                   e.preventDefault(); 
                 }
                 
                 const pos = getPos(e);
@@ -662,7 +681,7 @@
             function stop() {
                 if (isDrawing) {
                     isDrawing = false;
-                    saveDrawing(id); // Auto Save
+                    saveDrawing(id); 
                 }
             }
 
@@ -672,7 +691,7 @@
             canvas.addEventListener('mouseout', stop);
 
             canvas.addEventListener('touchstart', start, {passive: false});
-            canvas.addEventListener('touchmove', draw, {passive: false});
+            canvas.addEventListener('touchmove', draw, {passive: false}); // passive: false required to preventDefault
             canvas.addEventListener('touchend', stop);
         }
 
@@ -929,16 +948,6 @@
                         <div class="answer-content prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 text-xs md:text-sm">${item.answer}</div>
                     </div>
 
-                    <!-- DRAWING TOOLBAR - FIXED TO TOP RIGHT OF SCREEN -->
-                    <div id="toolbar-${item.id}" class="hidden fixed top-24 right-4 z-[60] flex gap-2 bg-white dark:bg-slate-800 p-2 rounded-full shadow-lg border border-slate-200 dark:border-slate-600 animate-fade-in-up">
-                        <button onclick="setTool(${item.id}, 'highlighter')" class="tool-btn bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 tool-active" data-tool="highlighter" title="Highlighter"><i class="fas fa-highlighter"></i></button>
-                        <button onclick="setTool(${item.id}, 'pen')" class="tool-btn bg-red-50 dark:bg-red-900/30 text-red-500" data-tool="pen" title="Red Pen"><i class="fas fa-pen"></i></button>
-                        <button onclick="setTool(${item.id}, 'eraser')" class="tool-btn bg-slate-100 dark:bg-slate-700 text-slate-600" data-tool="eraser" title="Eraser"><i class="fas fa-eraser"></i></button>
-                        <button onclick="setTool(${item.id}, 'clear')" class="tool-btn bg-slate-100 dark:bg-slate-700 text-red-500" data-tool="clear" title="Clear All"><i class="fas fa-trash"></i></button>
-                        <div class="w-px h-6 bg-slate-300 dark:bg-slate-600 mx-1 self-center"></div>
-                        <button onclick="toggleAnnotation(${item.id})" class="tool-btn bg-indigo-50 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400" title="Done"><i class="fas fa-check"></i></button>
-                    </div>
-
                 </article>`;
 
                 if (ENABLE_ADS && (index + 1) % 4 === 0 && index !== data.length - 1) {
@@ -977,16 +986,15 @@
             }
         }
         
+        // ... existing navigation functions ...
         function renderTOC(data) {
             const tocHTML = data.map(item => `
                 <button onclick="jumpToQuestion(${item.id})" class="toc-item group">
                     <span class="opacity-40 group-hover:opacity-100 mr-2 text-[9px]">${item.id}.</span> ${item.topic}
                 </button>
             `).join('');
-            
             sidebarTOC.innerHTML = tocHTML;
             mobileTOC.innerHTML = tocHTML;
-
             if (data.length === 0) {
                 sidebarTOC.innerHTML = '<p class="text-[10px] text-slate-400 dark:text-slate-500 px-4">No results</p>';
                 mobileTOC.innerHTML = '<p class="text-[10px] text-slate-400 dark:text-slate-500 px-4">No results</p>';
@@ -1002,11 +1010,8 @@
             const element = document.getElementById(`q-${id}`);
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
                 const highlightClasses = ['ring-4', 'ring-emerald-500', 'ring-offset-4', 'dark:ring-offset-slate-900', 'scale-[1.02]', 'shadow-[0_0_35px_rgba(16,185,129,0.6)]', 'z-20'];
-                
                 element.classList.add(...highlightClasses);
-                
                 setTimeout(() => {
                     element.classList.remove(...highlightClasses);
                 }, 2500);
