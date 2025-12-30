@@ -288,20 +288,6 @@
             #expand-header-btn { @apply hidden; }
             body.header-hidden #expand-header-btn { @apply flex fixed top-0 left-1/2 -translate-x-1/2 z-50 bg-white dark:bg-slate-800 px-4 py-1 rounded-b-xl shadow-lg border border-t-0 border-slate-200 dark:border-slate-700 text-indigo-600 dark:text-indigo-400 hover:pt-3 transition-all cursor-pointer; }
 
-            /* Floating Zoom Bar */
-            #zoom-bar {
-                @apply fixed z-50 flex items-center gap-1 bg-white/90 dark:bg-slate-800/90 backdrop-blur p-1.5 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 transition-all;
-                /* Position for Desktop */
-                bottom: 1.5rem; /* bottom-6 */
-                right: 1.5rem;  /* right-6 */
-            }
-            /* Adjust for Mobile (Left of FAB) */
-            @media (max-width: 1024px) {
-                #zoom-bar {
-                    right: 6rem; /* right-24 to avoid FAB overlap */
-                }
-            }
-
             /* Drawing Toolbar */
             .tool-btn { @apply w-9 h-9 rounded-full border border-slate-200 dark:border-slate-600 flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-sm bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-300; }
             .tool-active { @apply ring-2 ring-indigo-500 ring-offset-2 dark:ring-offset-slate-900 border-indigo-500 text-indigo-600 dark:text-indigo-400; }
@@ -330,7 +316,7 @@
                 }
 
                 /* 3. Hide UI Elements */
-                #sidebar, header, #main-header, #global-drawing-toolbar, #zoom-bar, #mobile-toc-trigger, #reading-progress, .bg-shapes, .action-buttons, #expand-sidebar-btn, #expand-header-btn, .ad-container, #introModal, .search-pill, #topic-pills {
+                #sidebar, header, #main-header, #global-drawing-toolbar, #mobile-toc-trigger, #reading-progress, .bg-shapes, .action-buttons, #expand-sidebar-btn, #expand-header-btn, .ad-container, #introModal, .search-pill, #topic-pills {
                     display: none !important;
                 }
 
@@ -425,19 +411,6 @@
     <button id="expand-header-btn" onclick="toggleHeader()" title="Expand Header">
         <i class="fas fa-chevron-down"></i>
     </button>
-
-    <!-- FLOATING ZOOM BAR (Bottom Right) -->
-    <div id="zoom-bar" class="animate-fade-in-up">
-        <button onclick="adjustZoom(-1)" class="tool-btn bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400" title="Zoom Out">
-            <i class="fas fa-search-minus text-xs"></i>
-        </button>
-        <button onclick="resetZoom()" class="tool-btn bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400" title="Reset Zoom">
-            <i class="fas fa-sync-alt text-xs"></i>
-        </button>
-        <button onclick="adjustZoom(1)" class="tool-btn bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400" title="Zoom In">
-            <i class="fas fa-search-plus text-xs"></i>
-        </button>
-    </div>
 
     <!-- Progress Bar (Sticky) -->
     <div class="fixed top-0 left-0 w-full h-1 z-[60] bg-slate-200 dark:bg-slate-800">
@@ -549,11 +522,25 @@
                                 <i class="fas fa-search"></i>
                             </span>
                             <input type="text" id="search-input" placeholder="Search keywords..." 
-                                   class="block w-full pl-10 pr-24 py-3 border-2 border-slate-100 dark:border-slate-700 rounded-[18px] bg-slate-50/50 dark:bg-slate-800/50 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-400 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-800 dark:text-slate-200 transition-all text-sm font-medium"
+                                   class="block w-full pl-10 pr-64 py-3 border-2 border-slate-100 dark:border-slate-700 rounded-[18px] bg-slate-50/50 dark:bg-slate-800/50 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-indigo-400 dark:focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-800 dark:text-slate-200 transition-all text-sm font-medium"
                                    aria-label="Search Questions">
                             
-                            <!-- Header Actions: Print, Theme, Zen Mode, Minimize Header -->
+                            <!-- Header Actions: Zoom, Print, Theme, Zen Mode, Minimize Header -->
                             <div class="absolute inset-y-0 right-2 flex items-center gap-1">
+                                <!-- Zoom Controls -->
+                                <button onclick="adjustZoom(-1)" class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 hidden sm:block" title="Zoom Out">
+                                    <i class="fas fa-search-minus text-xs"></i>
+                                </button>
+                                <button onclick="resetZoom()" class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 hidden sm:block" title="Reset Zoom">
+                                    <i class="fas fa-sync-alt text-xs"></i>
+                                </button>
+                                <button onclick="adjustZoom(1)" class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 hidden sm:block" title="Zoom In">
+                                    <i class="fas fa-search-plus text-xs"></i>
+                                </button>
+                                
+                                <!-- Divider -->
+                                <div class="h-4 w-px bg-slate-200 dark:bg-slate-700 mx-1 hidden sm:block"></div>
+
                                 <button onclick="window.print()" class="p-2 text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors rounded-full hover:bg-slate-100 dark:hover:bg-slate-700" title="Print All Questions" aria-label="Print">
                                     <i class="fas fa-print"></i>
                                 </button>
