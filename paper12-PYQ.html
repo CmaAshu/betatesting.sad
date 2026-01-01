@@ -121,13 +121,38 @@
             --color-text-muted: #94a3b8;
             --color-border: #334155;
         }
-        [data-theme="sepia"] {
-            --color-bg: #fdf6e3;
-            --color-surface: #f5eacf;
-            --color-text-main: #586e75;
-            --color-text-muted: #839496;
-            --color-border: #ddd6c1;
+        /* Jet Black Mode (OLED Friendly) */
+        [data-theme="black"] {
+            --color-bg: #000000;
+            --color-surface: #000000;
+            --color-text-main: #ffffff;
+            --color-text-muted: #a3a3a3;
+            --color-border: #333333;
         }
+        /* Specific overrides for Black mode visibility */
+        [data-theme="black"] .bg-surface {
+            border: 1px solid #333;
+        }
+        [data-theme="black"] .option {
+            background-color: #000;
+            border-color: #333;
+        }
+        [data-theme="black"] select {
+            background-color: #000;
+            color: #fff;
+        }
+        /* High Contrast & Glow for Correct/Incorrect in Black Mode */
+        [data-theme="black"] .option.correct {
+            background-color: rgba(16, 185, 129, 0.25) !important; /* Higher opacity green */
+            border-color: #10b981 !important;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); /* Green Glow */
+        }
+        [data-theme="black"] .option.incorrect {
+            background-color: rgba(239, 68, 68, 0.25) !important; /* Higher opacity red */
+            border-color: #ef4444 !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); /* Red Glow */
+        }
+
         body {
             background-color: var(--color-bg);
             color: var(--color-text-main);
@@ -235,6 +260,17 @@
             [data-theme="dark"] .generated-table tbody tr:nth-child(even) {
                 background-color: rgba(255, 255, 255, 0.05);
             }
+            /* Jet Black Mode Table Overrides */
+            [data-theme="black"] .custom-table-wrapper {
+                border-color: #333;
+            }
+            [data-theme="black"] .generated-table th, 
+            [data-theme="black"] .generated-table td {
+                border-color: #333;
+            }
+            [data-theme="black"] .generated-table tbody tr:nth-child(even) {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
         }
     </style>
 </head>
@@ -274,8 +310,8 @@
                 <button onclick="setTheme('dark')" id="theme-dark" class="theme-btn" title="Dark Mode">
                     <i class="fas fa-moon"></i>
                 </button>
-                <button onclick="setTheme('sepia')" id="theme-sepia" class="theme-btn" title="Sepia Mode">
-                    <i class="fas fa-coffee"></i>
+                <button onclick="setTheme('black')" id="theme-black" class="theme-btn" title="Absolute Jet Black Mode">
+                    <i class="fas fa-circle"></i>
                 </button>
             </div>
         </div>
@@ -284,7 +320,7 @@
     <main class="flex-grow flex flex-col max-w-2xl mx-auto px-4 md:px-5 w-full">
         <!-- Top Nav -->
         <div id="quizHeader" class="flex justify-between items-center mb-6">
-            <button class="btn-home" onclick="location.href='index.html'">
+            <button class="btn-home shadow-glow animate-pulse-glow border-primary text-primary" onclick="location.href='index.html'">
                 <i class="fas fa-home"></i> <span class="hidden sm:inline">Home</span>
             </button>
             <div class="flex items-center gap-2 sm:gap-3">
@@ -388,14 +424,17 @@
                         <i class="fas fa-link"></i> Copy Referral Link
                     </button>
                 </div>
+                
+                <!-- Action Buttons: Try Again & Try Another Set -->
                 <div class="grid grid-cols-2 gap-4 pt-6 border-t border-black/5">
-                    <button onclick="location.reload()" class="py-4 rounded-2xl font-bold text-sm bg-primary text-white shadow-lg shadow-indigo-100 hover:bg-primary-dark transition-all">
+                    <button onclick="loadSet(currentSetIdx)" class="py-4 rounded-2xl font-bold text-sm bg-primary text-white shadow-lg shadow-indigo-100 hover:bg-primary-dark transition-all">
                         Try Again
                     </button>
                     <button onclick="location.href='index.html'" class="py-4 rounded-2xl font-bold text-sm bg-black/5 text-slate-500 hover:bg-black/10 transition-all">
-                        Main Menu
+                        Home
                     </button>
                 </div>
+                
                 <div id="copyFeedback" class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest hidden animate-fade-in-up">
                     Copied to Clipboard!
                 </div>
@@ -520,6 +559,33 @@
             document.getElementById('quizHeader').classList.remove('hidden');
             updateStats();
             renderQuestion();
+        }
+
+        function openSetSelection() {
+            const selector = document.getElementById('setSelector');
+            // Scroll instantly to top
+            window.scrollTo({top: 0, behavior: 'auto'});
+            
+            // Highlight
+            selector.style.borderColor = '#6366f1';
+            selector.style.boxShadow = '0 0 0 4px rgba(99, 102, 241, 0.3)';
+            
+            // Attempt to open immediately
+            try {
+                if (typeof selector.showPicker === 'function') {
+                    selector.showPicker();
+                } else {
+                    selector.focus();
+                }
+            } catch (err) {
+                selector.focus();
+            }
+            
+            // Remove highlight
+            setTimeout(() => {
+                selector.style.borderColor = '';
+                selector.style.boxShadow = '';
+            }, 2000);
         }
 
         // --- ENHANCED TABLE PARSER FOR sw12.js DATA ---
