@@ -79,6 +79,7 @@
                         soft: '0 10px 40px -10px rgba(0,0,0,0.06)',
                         hover: '0 20px 40px -5px rgba(99, 102, 241, 0.12)',
                         'inner-soft': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
+                        'glow': '0 0 15px rgba(99, 102, 241, 0.5)',
                     },
                     animation: {
                         'rise': 'rise 20s linear infinite',
@@ -88,6 +89,7 @@
                         'pop': 'pop 0.3s ease-out forwards',
                         'rotate-border': 'rotate-border 3s linear infinite',
                         'confetti-fall': 'confetti-fall 3s linear forwards',
+                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         rise: { '0%': { transform: 'translateY(0) rotate(0deg)', opacity: '0.8' }, '80%': { opacity: '0.4' }, '100%': { transform: 'translateY(-125vh) rotate(360deg)', opacity: '0' } },
@@ -97,6 +99,7 @@
                         pop: { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.03)' }, '100%': { transform: 'scale(1)' } },
                         'rotate-border': { 'from': { transform: 'rotate(0deg)' }, 'to': { transform: 'rotate(360deg)' } },
                         'confetti-fall': { '0%': { transform: 'translateY(-20px) rotate(0deg)', opacity: '1' }, '100%': { transform: 'translateY(100vh) rotate(720deg)', opacity: '0' } },
+                        pulseGlow: { '0%, 100%': { opacity: '1', transform: 'scale(1)' }, '50%': { opacity: '0.7', transform: 'scale(1.05)' } },
                     }
                 }
             }
@@ -318,6 +321,15 @@
                 
                 <div id="optionsContainer" class="space-y-4" role="radiogroup" aria-labelledby="qTextDisplay"></div>
 
+                <!-- Glowing Swipe Hint (Visible on Mobile Only) -->
+                <div id="swipeHint" class="mt-8 flex justify-center md:hidden animate-pulse-glow">
+                    <div class="bg-primary/5 px-5 py-2 rounded-full border border-primary/20 backdrop-blur-sm shadow-glow">
+                        <span class="text-[10px] font-black text-primary uppercase tracking-[0.2em] flex items-center gap-3">
+                            <i class="fas fa-chevron-left text-[8px]"></i> Swipe to Navigate <i class="fas fa-chevron-right text-[8px]"></i>
+                        </span>
+                    </div>
+                </div>
+
                 <div id="explanationContainer" class="mt-8 p-6 bg-black/5 rounded-3xl border-l-4 border-primary hidden animate-fade-in-up">
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="text-xs font-bold uppercase text-primary tracking-wide">Explanation</h4>
@@ -402,6 +414,7 @@
         let userAnswers = [];
         let questionsAttempted = [];
         let touchStartX = 0;
+        let isScrollableTarget = false; // Add flag for scroll detection
 
         const qIndexEl = document.getElementById('qIndexDisplay');
         const qTextEl = document.getElementById('qTextDisplay');
@@ -438,7 +451,11 @@
                 return;
             }
             setSelector.innerHTML = quizSets.map((set, i) => `<option value="${i}">${set.setName}</option>`).join('');
-            setSelector.onchange = (e) => loadSet(parseInt(e.target.value));
+            setSelector.onchange = (e) => {
+                loadSet(parseInt(e.target.value));
+                // Explicitly remove focus from the select element to close the mobile picker
+                e.target.blur();
+            };
             loadSet(0);
             initGestures();
         }
@@ -447,15 +464,35 @@
             const area = document.getElementById('questionArea');
             area.addEventListener('touchstart', (e) => { 
                 if (e.touches.length === 1 && (!window.visualViewport || window.visualViewport.scale === 1)) {
-                    touchStartX = e.changedTouches[0].clientX; 
+                    touchStartX = e.changedTouches[0].clientX;
+                    
+                    // Check if the user touched a scrollable table/container
+                    const target = e.target;
+                    const scrollable = target.closest('.custom-table-wrapper, .overflow-x-auto');
+                    
+                    // If element is actually wider than its container, it is scrollable
+                    if (scrollable && scrollable.scrollWidth > scrollable.clientWidth) {
+                        isScrollableTarget = true;
+                    } else {
+                        isScrollableTarget = false;
+                    }
+
                 } else {
                     touchStartX = null; 
+                    isScrollableTarget = false;
                 }
             }, { passive: true });
             
             area.addEventListener('touchend', (e) => {
                 if (touchStartX === null) return;
                 
+                // Block navigation swipe if user is scrolling a table
+                if (isScrollableTarget) {
+                    touchStartX = null;
+                    isScrollableTarget = false;
+                    return;
+                }
+
                 if (window.visualViewport && window.visualViewport.scale > 1) {
                     touchStartX = null;
                     return;
