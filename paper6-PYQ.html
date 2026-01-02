@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#6366f1">
     
-    <!-- DYNAMIC SEO META TAGS - SYLLABUS 2022 COMPLIANT -->
+    <!-- DYNAMIC SEO META TAGS - SYLLABUS 2022 COMPLIANT (Preserved from Original Paper 6 File) -->
     <title>CMA Paper 6 MCQ Quiz - Financial Accounting Practice | Prepogy</title>
     <meta name="description" content="Free Online ICMAI CMA Paper 6 (Financial Accounting) MCQ Quiz. Practice the 2024-25 syllabus with instant results and detailed explanations. Perfect for CMA Intermediate Group I aspirants on Prepogy.">
     <meta name="keywords" content="CMA Paper 6 MCQ, Financial Accounting MCQ, ICMAI MCQ Practice, Prepogy CMA, CMA Intermediate Paper 6 Online Test, CMA 2024-25 Syllabus MCQs">
@@ -22,7 +22,7 @@
 
     <!-- SOCIAL MEDIA (OG TAGS) -->
     <meta property="og:title" content="CMA Paper 6 (Financial Accounting) MCQ Quiz - Prepogy">
-    <meta property="og:description" content="Master CMA Intermediate Paper 6 with our free online MCQ quiz. Get instant feedback, accuracy tracking, and expert explanations.">
+    <meta property="og:description" content="Master CMA Intermediate Paper 6 with our free online Previous year MCQ quiz. Get instant feedback, accuracy tracking, and expert explanations.">
     <meta property="og:image" content="https://prepogy.com/og-image-paper6.png">
     <meta property="og:url" content="https://prepogy.com/paper6-MCQ.html">
     <meta property="og:type" content="website">
@@ -59,7 +59,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Link to external Question Database -->
+    <!-- Link to external Question Database (Updated to sw6.js for Paper 6) -->
     <script src="sw6.js"></script>
 
     <script>
@@ -267,7 +267,7 @@
             
             <div id="questionContent" class="animate-slide-in">
                 <p id="qIndexDisplay" class="text-[11px] font-bold text-primary uppercase mb-5 tracking-[0.2em]"></p>
-                <h1 id="qTextDisplay" class="text-xl md:text-2xl font-bold mb-8 leading-tight">Loading CMA Intermediate Paper 6 MCQs...</h1>
+                <h1 id="qTextDisplay" class="text-xl md:text-2xl font-bold mb-8 leading-tight">Loading CMA Intermediate Paper 6 (Financial Accounting) MCQs...</h1>
                 
                 <div id="optionsContainer" class="space-y-4" role="radiogroup" aria-labelledby="qTextDisplay"></div>
 
@@ -399,6 +399,7 @@
             const savedTheme = localStorage.getItem('quiz-theme') || 'light';
             setTheme(savedTheme);
 
+            // CHANGED: Script check remains general, but it will look for 'quizSets' from sw6.js
             if (typeof quizSets === 'undefined') {
                 qTextEl.textContent = "Error: Database not found.";
                 return;
@@ -629,5 +630,4 @@
         window.onload = initQuiz;
     </script>
 </body>
-
 </html>
