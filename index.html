@@ -227,6 +227,67 @@
     </div>
 
     <header class="text-center py-10 md:py-16 px-5 relative shrink-0">
+        <!-- Notification Bell -->
+        <div class="absolute top-4 right-4 md:top-8 md:right-8 z-40" id="notif-container">
+            <button onclick="App.toggleNotifications()" class="relative p-3 bg-white rounded-full shadow-md text-slate-600 hover:text-indigo-600 transition-all hover:shadow-lg group">
+                <i class="fas fa-bell text-xl"></i>
+                <span class="absolute top-0 right-0 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-white"></span>
+                </span>
+            </button>
+            
+            <!-- Dropdown -->
+            <div id="notif-dropdown" class="hidden absolute right-0 mt-3 w-[85vw] md:w-96 bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 transform origin-top-right transition-all z-50 text-left overflow-hidden">
+                <div class="p-4 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
+                    <h3 class="font-bold text-gray-800">Notifications</h3>
+                    <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full uppercase tracking-wider">4 New</span>
+                </div>
+                <div class="max-h-[60vh] overflow-y-auto">
+                    <!-- Item 1: CMA Inter Bug Fixes -->
+                    <div class="p-4 border-b border-gray-50 hover:bg-emerald-50/30 transition-colors">
+                        <div class="flex gap-3">
+                            <div class="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><i class="fas fa-check-circle"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">CMA Inter: Quality Update</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">We've squashed all bugs! 🐛 The question bank data is now 100% error-free for a smoother learning experience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 2: Audit Revision -->
+                    <div class="p-4 border-b border-gray-50 hover:bg-indigo-50/30 transition-colors">
+                        <div class="flex gap-3">
+                            <div class="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600"><i class="fas fa-rocket"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">New: Super 51 Concepts</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">🚀 Boost your Auditing prep! A new section covering 'Super 51' high-yield concepts is now live.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 3: Foundation Star Series -->
+                    <div class="p-4 border-b border-gray-50 hover:bg-amber-50/30 transition-colors">
+                        <div class="flex gap-3">
+                            <div class="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600"><i class="fas fa-star"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Foundation: Star Series</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">🌟 Coming Soon: 'Prepogy Star Series' MCQs covering almost every syllabus concept.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Item 4: Roadmap -->
+                    <div class="p-4 hover:bg-purple-50/30 transition-colors">
+                        <div class="flex gap-3">
+                            <div class="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600"><i class="fas fa-tools"></i></div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">Roadmap Update</p>
+                                <p class="text-xs text-slate-500 mt-1 leading-relaxed">🛠️ We are actively adding PYQs and finalizing additional optimizations for the MCQ bank.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="w-24 h-24 md:w-36 md:h-36 mx-auto mb-5 cursor-pointer transition-all duration-300 hover:scale-110 flex items-center justify-center animate-floating" id="logoHome" role="button">
             <img src="prep.png" alt="Prepogy - CMA Exam Hub Logo" width="144" height="144" class="w-full h-auto object-contain">
         </div>
@@ -468,6 +529,24 @@
                 document.getElementById('logoHome').onclick = () => this.navigateTo('view-home');
             },
 
+            // New Function: Notification Toggle
+            toggleNotifications() {
+                const el = document.getElementById('notif-dropdown');
+                el.classList.toggle('hidden');
+                
+                // Close when clicking outside logic
+                if (!el.classList.contains('hidden')) {
+                    const closeHandler = (e) => {
+                        if (!e.target.closest('#notif-container')) {
+                            el.classList.add('hidden');
+                            document.removeEventListener('click', closeHandler);
+                        }
+                    };
+                    // Timeout ensures the current click doesn't immediately close it
+                    setTimeout(() => document.addEventListener('click', closeHandler), 0);
+                }
+            },
+
             navigateTo(viewId, paperData = null) {
                 if (this.currentViewId === viewId && !paperData) return;
                 
@@ -545,8 +624,8 @@
                 // Toggle SJC Card (For Cost Accounting P8)
                 if (id == '8') sjcCard.classList.remove('hidden'); else sjcCard.classList.add('hidden');
                 
-                // Toggle PYQ Card (For Inter)
-                if (isInter) pyqCard.classList.remove('hidden'); else pyqCard.classList.add('hidden');
+                // Toggle PYQ Card (For Inter, excluding Paper 7)
+                if (isInter && id != '7') pyqCard.classList.remove('hidden'); else pyqCard.classList.add('hidden');
                 
                 // Toggle Audit Revision Card (For Audit P10)
                 if (id == '10') auditCard.classList.remove('hidden'); else auditCard.classList.add('hidden');
