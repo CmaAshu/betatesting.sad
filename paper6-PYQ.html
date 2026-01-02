@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#6366f1">
     
-    <!-- DYNAMIC SEO META TAGS - SYLLABUS 2022 COMPLIANT (Preserved) -->
+    <!-- DYNAMIC SEO META TAGS - SYLLABUS 2022 COMPLIANT -->
     <title>CMA Paper 6 MCQ Quiz - Financial Accounting Practice | Prepogy</title>
     <meta name="description" content="Free Online ICMAI CMA Paper 6 (Financial Accounting) MCQ Quiz. Practice the 2024-25 syllabus with instant results and detailed explanations. Perfect for CMA Intermediate Group I aspirants on Prepogy.">
     <meta name="keywords" content="CMA Paper 6 MCQ, Financial Accounting MCQ, ICMAI MCQ Practice, Prepogy CMA, CMA Intermediate Paper 6 Online Test, CMA 2024-25 Syllabus MCQs">
@@ -232,7 +232,7 @@
             /* Cell Styling - GRID LINES */
             .generated-table th, 
             .generated-table td {
-                @apply border border-slate-300 p-3;
+                @apply border border-slate-300 p-3 align-top;
             }
 
             /* Zebra Striping */
@@ -561,125 +561,145 @@
             renderQuestion();
         }
 
-        function openSetSelection() {
-            const selector = document.getElementById('setSelector');
-            // Scroll instantly to top
-            window.scrollTo({top: 0, behavior: 'auto'});
-            
-            // Highlight
-            selector.style.borderColor = '#6366f1';
-            selector.style.boxShadow = '0 0 0 4px rgba(99, 102, 241, 0.3)';
-            
-            // Attempt to open immediately
-            try {
-                if (typeof selector.showPicker === 'function') {
-                    selector.showPicker();
-                } else {
-                    selector.focus();
-                }
-            } catch (err) {
-                selector.focus();
-            }
-            
-            // Remove highlight
-            setTimeout(() => {
-                selector.style.borderColor = '';
-                selector.style.boxShadow = '';
-            }, 2000);
-        }
-
-        // --- ENHANCED TABLE PARSER FOR sw6.js DATA ---
+        // --- ULTRA-ROBUST TABLE PARSER (Handles |, :, and implied lists) ---
         function parseTableFromText(text) {
-            // Check if text likely contains a pipe-based table from the source data
-            // Most tables in sw6.js use <br> for newlines and | for columns
-            if (!text.includes('|')) return text;
-
-            // 1. Replace <br>, <br/>, <br /> tags with a consistent newline token
             let formattedText = text.replace(/<br\s*\/?>/gi, '\n');
-
-            // 2. Split into lines
             const lines = formattedText.split('\n');
+            
             let html = '';
-            let inTable = false;
             let tableBuffer = [];
+            let tableType = null; // 'pipe', 'colon', 'implicit'
+
+            const flushBuffer = () => {
+                if (tableBuffer.length > 0) {
+                    html += renderTable(tableBuffer, tableType);
+                    tableBuffer = [];
+                    tableType = null;
+                }
+            };
+
+            // RegEx for "Key: Value" pattern (e.g. "Opening Stock: 50000")
+            const colonRegex = /^(.+?):(.+)$/;
+            // RegEx for Implicit List Item (e.g. "Opening Stock 50000") - simplified
+            // We look for lines that are shortish and contain numbers, likely part of a list
+            const implicitRegex = /^(.+?)(\d[\d,.]*)$/;
 
             lines.forEach((line) => {
                 let trimmedLine = line.trim();
-                
-                // Detection logic: line contains at least one pipe '|'
+                if (!trimmedLine) return;
+
+                // 1. Pipe Table Detection
                 if (trimmedLine.includes('|')) {
-                    if (!inTable) {
-                        inTable = true;
-                    }
+                    if (tableType && tableType !== 'pipe') flushBuffer();
+                    tableType = 'pipe';
                     tableBuffer.push(trimmedLine);
-                } else {
-                    // If we were in a table and hit a non-table line, render the table
-                    if (inTable) {
-                        html += renderTable(tableBuffer);
-                        tableBuffer = [];
-                        inTable = false;
+                } 
+                // 2. Colon List Detection
+                else if (colonRegex.test(trimmedLine)) {
+                    // Avoid long sentences being treated as data
+                    if (trimmedLine.length < 100) {
+                        if (tableType && tableType !== 'colon') flushBuffer();
+                        tableType = 'colon';
+                        tableBuffer.push(trimmedLine);
+                    } else {
+                        flushBuffer();
+                        html += `<div class="mb-2">${trimmedLine}</div>`;
                     }
-                    // Append non-table text
-                    if (trimmedLine.length > 0) {
+                }
+                // 3. Implicit List Detection (Experimental)
+                // If a line is short (< 60 chars) and ends with a number or starts with a bullet/dash
+                // This catches "Opening Stock 20000" without colons
+                else if (trimmedLine.length < 60 && /\d$/.test(trimmedLine) && !trimmedLine.endsWith('.')) {
+                     if (tableType && tableType !== 'implicit') flushBuffer();
+                     tableType = 'implicit';
+                     tableBuffer.push(trimmedLine);
+                }
+                // Normal Text
+                else {
+                    flushBuffer();
+                    // Check if it's a "header" line for a list (e.g. "Following information:")
+                    if (trimmedLine.endsWith(':')) {
+                        html += `<div class="mb-2 font-bold opacity-80">${trimmedLine}</div>`;
+                    } else {
                         html += `<div class="mb-2">${trimmedLine}</div>`;
                     }
                 }
             });
 
-            // If ended while still in a table
-            if (inTable) {
-                html += renderTable(tableBuffer);
-            }
-            
+            flushBuffer();
             return html;
         }
 
-        function renderTable(rows) {
+        function renderTable(rows, type) {
             if (rows.length === 0) return '';
+            
+            // Don't render single lines as tables unless they are strictly pipe-tables
+            if (rows.length < 2 && type !== 'pipe') {
+                return rows.map(r => `<div class="mb-2 font-medium">${r}</div>`).join('');
+            }
 
             let tableHtml = '<div class="custom-table-wrapper"><table class="generated-table">';
             
-            // Assume first row is header if it contains bold tags OR if it's the first row of a multi-row table
-            
-            let isFirstRow = true;
+            if (type === 'pipe') {
+                let isFirstRow = true;
+                rows.forEach(row => {
+                    let cleanRow = row;
+                    let isHeaderRow = false;
+                    
+                    if (cleanRow.toLowerCase().startsWith('<b>') && cleanRow.toLowerCase().endsWith('</b>')) {
+                        cleanRow = cleanRow.substring(3, cleanRow.length - 4);
+                        isHeaderRow = true;
+                    } else if (isFirstRow) {
+                        isHeaderRow = true;
+                    }
 
-            rows.forEach(row => {
-                // Remove outer bold tags if they exist across the whole row string
-                // e.g. "<b>Col1 | Col2</b>" -> "Col1 | Col2"
-                let cleanRow = row;
-                let isHeaderRow = false;
+                    const cells = cleanRow.split('|');
+                    if (isHeaderRow && isFirstRow) {
+                        tableHtml += '<thead><tr>';
+                        cells.forEach(cell => {
+                            let content = cell.replace(/<\/?b>/gi, '').trim();
+                            tableHtml += `<th>${content}</th>`;
+                        });
+                        tableHtml += '</tr></thead><tbody>';
+                    } else {
+                        tableHtml += '<tr>';
+                        cells.forEach(cell => {
+                            tableHtml += `<td>${cell.trim()}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    }
+                    isFirstRow = false;
+                });
+            } 
+            else if (type === 'colon') {
+                tableHtml += '<tbody>';
+                rows.forEach(row => {
+                    const parts = row.split(':');
+                    // Rejoin if multiple colons existed, but split at first
+                    const key = parts[0].trim().replace(/<\/?b>/gi, ''); // Remove bold from key
+                    const val = parts.slice(1).join(':').trim();
+                    tableHtml += `<tr><td class="font-bold bg-primary/5 w-1/2">${key}</td><td class="font-mono text-primary">${val}</td></tr>`;
+                });
+                tableHtml += '</tbody>';
+            }
+            else if (type === 'implicit') {
+                tableHtml += '<tbody>';
+                rows.forEach(row => {
+                    // Try to split by last space to separate Label from Number
+                    const lastSpaceIndex = row.lastIndexOf(' ');
+                    if (lastSpaceIndex > 0) {
+                        const key = row.substring(0, lastSpaceIndex).trim();
+                        const val = row.substring(lastSpaceIndex + 1).trim();
+                        tableHtml += `<tr><td class="font-bold bg-primary/5 w-2/3">${key}</td><td class="font-mono text-primary">${val}</td></tr>`;
+                    } else {
+                        // Fallback
+                        tableHtml += `<tr><td colspan="2">${row}</td></tr>`;
+                    }
+                });
+                tableHtml += '</tbody>';
+            }
 
-                if (cleanRow.toLowerCase().startsWith('<b>') && cleanRow.toLowerCase().endsWith('</b>')) {
-                    cleanRow = cleanRow.substring(3, cleanRow.length - 4);
-                    isHeaderRow = true;
-                } 
-                // Or if it's the very first row found in this block, treat as header for better styling
-                else if (isFirstRow) {
-                    isHeaderRow = true;
-                }
-
-                const cells = cleanRow.split('|');
-                
-                if (isHeaderRow && isFirstRow) {
-                    tableHtml += '<thead><tr>';
-                    cells.forEach(cell => {
-                        // Strip internal bold tags if present since TH is already bold
-                        let content = cell.replace(/<\/?b>/gi, '').trim();
-                        tableHtml += `<th>${content}</th>`;
-                    });
-                    tableHtml += '</tr></thead><tbody>';
-                } else {
-                    tableHtml += '<tr>';
-                    cells.forEach(cell => {
-                        tableHtml += `<td>${cell.trim()}</td>`;
-                    });
-                    tableHtml += '</tr>';
-                }
-                
-                isFirstRow = false;
-            });
-
-            tableHtml += '</tbody></table></div>';
+            tableHtml += '</table></div>';
             return tableHtml;
         }
 
@@ -688,7 +708,7 @@
             const q = set[currentQIdx];
             qIndexEl.textContent = `Progress • ${currentQIdx + 1} of ${set.length}`;
             
-            // Use the parser to transform pipe-delimited text into HTML tables
+            // NEW: Use the robust parser
             qTextEl.innerHTML = parseTableFromText(q.q);
             
             optionsEl.innerHTML = '';
