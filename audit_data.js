@@ -5,57 +5,6 @@ const auditData = [
     {
         id: 1,
         section: "Company Audit",
-        topic: "🚫 Prohibited Services",
-        meta: "(PYQ J' 17 & D' 19 & D' 21 & D' 23-old)",
-        question: "List down the certain services which are not to be rendered by the Auditor of a Company.",
-        answer: `
-            <h3 class="text-rose-600 font-extrabold mb-3">🚫 Auditor not to render certain services [section 144]</h3>
-            <p class="mb-4">An auditor appointed under this Act shall provide to the company only such other services as are approved by the Board of Directors or the audit committee, as the case maybe, but which shall not include any of the following services (whether such services are rendered directly or indirectly to the company or its holding company or subsidiary company) namely:—</p>
-            <ul class="space-y-2">
-                <li>👉 <strong>accounting and book keeping services;</strong></li>
-                <li>👉 <strong>internal audit;</strong></li>
-                <li>👉 <strong>design and implementation of any financial information system;</strong></li>
-                <li>👉 <strong>actuarial services;</strong></li>
-                <li>👉 <strong>investment advisory services;</strong></li>
-                <li>👉 <strong>investment banking services;</strong></li>
-                <li>👉 <strong>rendering of outsourced financial services;</strong></li>
-                <li>👉 <strong>management services; and</strong></li>
-                <li>👉 <strong>any other kind of services as may be prescribed.</strong></li>
-            </ul>
-            <p class="mt-4 border-l-4 border-indigo-500 pl-4 italic text-slate-500 font-medium">Provided that an auditor or audit firm who or which has been performing any non-audit services on or before the commencement of this Act shall comply with the provisions of this section before the closure of the first financial year after the date of such commencement.</p>
-        `
-    },
-    {
-        id: 2,
-        section: "Company Audit",
-        topic: "🚪 Removal of Auditor",
-        meta: "(MQP 23-I-old) (Study Material)",
-        question: "State the provisions of Companies Act 2013 regarding the removal of a company auditor.",
-        answer: `
-            <p class="mb-4 text-lg font-medium">A company auditor can be removed from his office in the following ways:</p>
-            
-            <h3 class="text-blue-600 font-extrabold mb-2 underline decoration-blue-200">1️⃣ Removal of Auditor before the Expiry of His Term:</h3>
-            <p class="mb-3 leading-relaxed italic">The auditor appointed under section 139 may be removed from his office before the expiry of his term only by a <strong>special resolution</strong> of the company, after obtaining the <strong>previous approval of the Central Government</strong> in that behalf in the manner prescribed in rule 7 of chapter X under the act.</p>
-            <ul class="mb-4 space-y-2">
-                <li class="flex items-start gap-2">📌 <span>An application to the Central Government for removal of the auditor shall be made in <strong>e- Form ADT-2</strong>. The application shall be accompanied with fees as provided for this purpose under the Companies (Registration Offices and Fees) Rules, 2014.</span></li>
-                <li class="flex items-start gap-2">📌 <span>The application shall be made to the Central Government within <strong>thirty days</strong> of the resolution passed by the Board.</span></li>
-                <li class="flex items-start gap-2">📌 <span>The company shall hold the general meeting within <strong>sixty days</strong> of receipt of approval of the Central Government for passing the special resolution for removal of the said auditor.</span></li>
-            </ul>
-            <p class="mb-6 font-semibold text-slate-600 italic">Provided that before taking any action under this sub-section The auditor concerned shall be given a reasonable opportunity of being heard.</p>
-
-            <h3 class="text-blue-600 font-extrabold mb-2 underline decoration-blue-200">2️⃣ Removal of the Auditor by Tribunal:</h3>
-            <p class="mb-3 italic">The provisions in relation to removal of an auditor as contained in Section 140(5) are as follows:</p>
-            <ul class="space-y-4">
-                <li class="pl-4 border-l-2 border-blue-200">⚖️ The Tribunal either <strong>suo motu</strong> or on an application made to it by the Central Government or by any person concerned, may, by order, direct the company to change its auditors if it is satisfied that the auditor has, whether directly or indirectly, acted in a <strong>fraudulent manner</strong> or abetted or colluded in any fraud by, or in relation to, the company or its directors or officers.</li>
-                <li class="pl-4 border-l-2 border-blue-200">⚖️ If the application is made by the Central Government and the Tribunal is satisfied that any change of the auditor is required, it shall within <strong>fifteen days</strong> of receipt of such application, make an order to removal the auditor from his office.</li>
-                <li class="pl-4 border-l-2 border-blue-200">⚖️ The Central Government may appoint another auditor in his place.</li>
-                <li class="pl-4 border-l-2 border-blue-200 italic font-medium">⚖️ An auditor, whether individual or firm, against whom final order has been passed by the Tribunal under this section shall <strong>not be eligible to be appointed as an auditor of any company for a period of five years</strong> from the date of passing of the order and the auditor shall also be liable for action under section 447.</li>
-            </ul>
-        `
-    },
-    {
-        id: 3,
-        section: "Company Audit",
         topic: "🔄 Rotation of Auditors",
         meta: "(Study Material) (PYQ J' 18 & J' 23-new)",
         question: "Discuss about the manner in which rotation of auditors may be done by the company on expiry of their term.",
@@ -83,7 +32,7 @@ const auditData = [
         `
     },
     {
-        id: 4,
+        id: 2,
         section: "Company Audit",
         topic: "🏢 Branch Audit",
         meta: "(Study Material) (PYQ D' 17 & D' 19)",
@@ -95,36 +44,71 @@ const auditData = [
         `
     },
     {
+        id: 3,
+        section: "Company Audit",
+        topic: "🚫 Prohibited Services",
+        meta: "(PYQ J' 17 & D' 19 & D' 21 & D' 23-old)",
+        question: "List down the certain services which are not to be rendered by the Auditor of a Company.",
+        answer: `
+            <h3 class="text-rose-600 font-extrabold mb-3">🚫 Auditor not to render certain services [section 144]</h3>
+            <p class="mb-4">An auditor appointed under this Act shall provide to the company only such other services as are approved by the Board of Directors or the audit committee, as the case maybe, but which shall not include any of the following services (whether such services are rendered directly or indirectly to the company or its holding company or subsidiary company) namely:—</p>
+            <ul class="space-y-2">
+                <li>👉 <strong>accounting and book keeping services;</strong></li>
+                <li>👉 <strong>internal audit;</strong></li>
+                <li>👉 <strong>design and implementation of any financial information system;</strong></li>
+                <li>👉 <strong>actuarial services;</strong></li>
+                <li>👉 <strong>investment advisory services;</strong></li>
+                <li>👉 <strong>investment banking services;</strong></li>
+                <li>👉 <strong>rendering of outsourced financial services;</strong></li>
+                <li>👉 <strong>management services; and</strong></li>
+                <li>👉 <strong>any other kind of services as may be prescribed.</strong></li>
+            </ul>
+            <p class="mt-4 border-l-4 border-indigo-500 pl-4 italic text-slate-500 font-medium">Provided that an auditor or audit firm who or which has been performing any non-audit services on or before the commencement of this Act shall comply with the provisions of this section before the closure of the first financial year after the date of such commencement.</p>
+        `
+    },
+    {
+        id: 4,
+        section: "Company Audit",
+        topic: "🚪 Removal of Auditor",
+        meta: "(MQP 23-I-old) (Study Material)",
+        question: "State the provisions of Companies Act 2013 regarding the removal of a company auditor.",
+        answer: `
+            <p class="mb-4 text-lg font-medium">A company auditor can be removed from his office in the following ways:</p>
+            
+            <h3 class="text-blue-600 font-extrabold mb-2 underline decoration-blue-200">1️⃣ Removal of Auditor before the Expiry of His Term:</h3>
+            <p class="mb-3 leading-relaxed italic">The auditor appointed under section 139 may be removed from his office before the expiry of his term only by a <strong>special resolution</strong> of the company, after obtaining the <strong>previous approval of the Central Government</strong> in that behalf in the manner prescribed in rule 7 of chapter X under the act.</p>
+            <ul class="mb-4 space-y-2">
+                <li class="flex items-start gap-2">📌 <span>An application to the Central Government for removal of the auditor shall be made in <strong>e- Form ADT-2</strong>. The application shall be accompanied with fees as provided for this purpose under the Companies (Registration Offices and Fees) Rules, 2014.</span></li>
+                <li class="flex items-start gap-2">📌 <span>The application shall be made to the Central Government within <strong>thirty days</strong> of the resolution passed by the Board.</span></li>
+                <li class="flex items-start gap-2">📌 <span>The company shall hold the general meeting within <strong>sixty days</strong> of receipt of approval of the Central Government for passing the special resolution for removal of the said auditor.</span></li>
+            </ul>
+            <p class="mb-6 font-semibold text-slate-600 italic">Provided that before taking any action under this sub-section The auditor concerned shall be given a reasonable opportunity of being heard.</p>
+
+            <h3 class="text-blue-600 font-extrabold mb-2 underline decoration-blue-200">2️⃣ Removal of the Auditor by Tribunal:</h3>
+            <p class="mb-3 italic">The provisions in relation to removal of an auditor as contained in Section 140(5) are as follows:</p>
+            <ul class="space-y-4">
+                <li class="pl-4 border-l-2 border-blue-200">⚖️ The Tribunal either <strong>suo motu</strong> or on an application made to it by the Central Government or by any person concerned, may, by order, direct the company to change its auditors if it is satisfied that the auditor has, whether directly or indirectly, acted in a <strong>fraudulent manner</strong> or abetted or colluded in any fraud by, or in relation to, the company or its directors or officers.</li>
+                <li class="pl-4 border-l-2 border-blue-200">⚖️ If the application is made by the Central Government and the Tribunal is satisfied that any change of the auditor is required, it shall within <strong>fifteen days</strong> of receipt of such application, make an order to removal the auditor from his office.</li>
+                <li class="pl-4 border-l-2 border-blue-200">⚖️ The Central Government may appoint another auditor in his place.</li>
+                <li class="pl-4 border-l-2 border-blue-200 italic font-medium">⚖️ An auditor, whether individual or firm, against whom final order has been passed by the Tribunal under this section shall <strong>not be eligible to be appointed as an auditor of any company for a period of five years</strong> from the date of passing of the order and the auditor shall also be liable for action under section 447.</li>
+            </ul>
+        `
+    },
+    {
         id: 5,
         section: "Company Audit",
-        topic: "🤝 Joint Auditor",
-        meta: "(Study Material) (PYQ J' 18)",
-        question: "Write short notes on the responsibility of a joint auditor.",
+        topic: "📋 Cost Auditor Appointment",
+        meta: "(Study Material) (PYQ D' 17 & D' 23-new)",
+        question: "What is the procedure of appointing a cost auditor in a company?",
         answer: `
-            <p class="text-lg font-black text-slate-700 mb-4 border-b pb-2">SA 299, Responsibility of Joint Auditor, has prescribed the following guidelines with respect to joint audit:</p>
-
-            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">📐 Division of Work:</h3>
-            <p class="mb-4 italic">Where joint auditors are appointed, they should, by mutual discussion, <strong>divide the audit work among themselves</strong>. The division of work would usually be in terms of audit of identifiable units or specified areas. In some cases, due to the nature of the business of the entity under audit, such a division of work may not be possible. In such situations, the division of work may be with reference to items of assets or liabilities or income or expenditure or with reference to periods of time. Certain areas of work, owing to their importance or owing to the nature of the work involved, would often not be divided and would be covered by all the joint auditors. The division of work among joint auditors as well as the areas of work to be covered by all of them should be <strong>adequately documented and preferably communicated to the entity</strong>.</p>
-
-            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">🤝 Co-ordination:</h3>
-            <p class="mb-4 italic">Where, in the course of his work, a joint auditor comes across matters which are relevant to the areas of responsibility of other joint auditors and which deserve their attention, or which require disclosure or require discussion with, or application of judgement by, other joint auditors, <strong>he should communicate the same to all the other joint auditors in writing</strong>. This should be done by the submission of a report or note prior to the finalisation of the audit.</p>
-
-            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">⚖️ Relationship among Joint Auditors and Their Responsibility:</h3>
-            <p class="mb-3 italic font-medium">In respect of audit work divided among the joint auditors, each joint auditor is responsible only for the work allocated to him, whether or not he has prepared a separate report on the work performed by him. On the other hand, all the joint auditors are <strong>jointly and severally responsible</strong>:</p>
-            <ul class="mb-6 space-y-4">
-                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of the audit work which is <strong>not divided</strong> among the joint auditors and is carried out by all of them;</li>
-                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of <strong>decisions taken by all the joint auditors</strong> concerning the nature, timing or extent of the audit procedures to be performed by any of the joint auditors. It may, however, be clarified that all the joint auditors are responsible only in respect of the appropriateness of the decisions concerning the nature, timing or extent of the audit procedures agreed upon among them; proper execution of these audit procedures is the separate and specific responsibility of the joint auditor concerned;</li>
-                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of matters which are brought to the notice of the joint auditors by any one of them and on which there is an <strong>agreement among the joint auditors</strong>;</li>
-                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 for examining that the <strong>financial statements of the entity comply with the disclosure requirements</strong> of the relevant statute; and</li>
-                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 for ensuring that the <strong>audit report complies with the requirements</strong> of the relevant statute.</li>
+            <p class="mb-4 italic font-medium">As per <strong>Section 148(3)</strong> of the Companies Act 2013, cost audit shall be conducted by a <strong>Cost Accountant</strong> who shall be appointed by the Board. No person appointed under Section 139 as an auditor of the company shall be appointed for conducting the audit of cost records. The auditor so appointed shall comply with the cost auditing standards.</p>
+            
+            <h3 class="text-rose-600 font-extrabold mb-4 uppercase tracking-tighter decoration-rose-200 underline">📋 Rule 6 of the Companies (Cost Records and Audit) Rules 2014 –</h3>
+            <ul class="space-y-6 pl-4 border-l-4 border-rose-500">
+                <li>📌 <span>The category of companies specified in rule 3 and the thresholds limits laid down in rule 4, shall within <strong>one hundred and eighty days</strong> of the commencement of every financial year, appoint a cost auditor.</span></li>
+                <li>📌 <span>Every company referred to in sub-rule (1) shall inform the cost auditor concerned of his or its appointment as such and file a notice of such appointment with the Central Government within a period of <strong>30 days of the Board meeting</strong> in which such appointment is made or within a period of <strong>180 days of the commencement of the financial year</strong>, whichever is earlier, through electronic mode, in <strong>Form CRA-2</strong>, along with the fee as specified in Companies (Registration Offices and Fees) Rules, 2014.</span></li>
+                <li>📌 <span>Every cost auditor appointed as such shall continue in such capacity till the <strong>expiry of 180 days from the closure of the financial year</strong> or till he submits the cost audit report, for the financial year for which he has been appointed.</span></li>
             </ul>
-            <p class="p-3 bg-slate-100 rounded-xl font-medium italic text-slate-500 text-xs">If any matters of the nature referred to in (B) above are brought to the attention of the entity or other joint auditors by an auditor after the audit report has been submitted, the other joint auditors would not be responsible for those matters.</p>
-
-            <h4 class="text-indigo-700 font-black mt-4 mb-1">🔗 Dependence on Other Auditors:</h4>
-            <p class="mb-4 italic text-sm">Each joint auditor is entitled to assume that the other joint auditors have carried out their part of the audit work in accordance with the generally accepted audit procedures. It is not necessary for a joint auditor to review the work performed by other joint auditors or perform any tests in order to ascertain whether the work has actually been performed in such a manner. Each joint auditor is entitled to rely upon the other joint auditors for bringing to his notice any departure from generally accepted accounting principles or any material error noticed in the course of the audit.</p>
-
-            <h4 class="text-indigo-700 font-black mb-1">📢 Reporting Responsibilities:</h4>
-            <p class="text-sm">Normally, the joint auditors are able to arrive at an agreed report. However, where the joint auditors are in <strong>disagreement</strong> with regard to any matters to be covered by the report, each one of them should express his own opinion through a <strong>separate report</strong>. A joint auditor is not bound by the views of the majority of the joint auditors regarding matters to be covered in the report and should express his opinion in a separate report in case of a disagreement.</p>
         `
     },
     {
@@ -186,22 +170,81 @@ const auditData = [
     {
         id: 7,
         section: "Company Audit",
-        topic: "📋 Cost Auditor Appointment",
-        meta: "(Study Material) (PYQ D' 17 & D' 23-new)",
-        question: "What is the procedure of appointing a cost auditor in a company?",
+        topic: "🤝 Joint Auditor",
+        meta: "(Study Material) (PYQ J' 18)",
+        question: "Write short notes on the responsibility of a joint auditor.",
         answer: `
-            <p class="mb-4 italic font-medium">As per <strong>Section 148(3)</strong> of the Companies Act 2013, cost audit shall be conducted by a <strong>Cost Accountant</strong> who shall be appointed by the Board. No person appointed under Section 139 as an auditor of the company shall be appointed for conducting the audit of cost records. The auditor so appointed shall comply with the cost auditing standards.</p>
-            
-            <h3 class="text-rose-600 font-extrabold mb-4 uppercase tracking-tighter decoration-rose-200 underline">📋 Rule 6 of the Companies (Cost Records and Audit) Rules 2014 –</h3>
-            <ul class="space-y-6 pl-4 border-l-4 border-rose-500">
-                <li>📌 <span>The category of companies specified in rule 3 and the thresholds limits laid down in rule 4, shall within <strong>one hundred and eighty days</strong> of the commencement of every financial year, appoint a cost auditor.</span></li>
-                <li>📌 <span>Every company referred to in sub-rule (1) shall inform the cost auditor concerned of his or its appointment as such and file a notice of such appointment with the Central Government within a period of <strong>30 days of the Board meeting</strong> in which such appointment is made or within a period of <strong>180 days of the commencement of the financial year</strong>, whichever is earlier, through electronic mode, in <strong>Form CRA-2</strong>, along with the fee as specified in Companies (Registration Offices and Fees) Rules, 2014.</span></li>
-                <li>📌 <span>Every cost auditor appointed as such shall continue in such capacity till the <strong>expiry of 180 days from the closure of the financial year</strong> or till he submits the cost audit report, for the financial year for which he has been appointed.</span></li>
+            <p class="text-lg font-black text-slate-700 mb-4 border-b pb-2">SA 299, Responsibility of Joint Auditor, has prescribed the following guidelines with respect to joint audit:</p>
+
+            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">📐 Division of Work:</h3>
+            <p class="mb-4 italic">Where joint auditors are appointed, they should, by mutual discussion, <strong>divide the audit work among themselves</strong>. The division of work would usually be in terms of audit of identifiable units or specified areas. In some cases, due to the nature of the business of the entity under audit, such a division of work may not be possible. In such situations, the division of work may be with reference to items of assets or liabilities or income or expenditure or with reference to periods of time. Certain areas of work, owing to their importance or owing to the nature of the work involved, would often not be divided and would be covered by all the joint auditors. The division of work among joint auditors as well as the areas of work to be covered by all of them should be <strong>adequately documented and preferably communicated to the entity</strong>.</p>
+
+            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">🤝 Co-ordination:</h3>
+            <p class="mb-4 italic">Where, in the course of his work, a joint auditor comes across matters which are relevant to the areas of responsibility of other joint auditors and which deserve their attention, or which require disclosure or require discussion with, or application of judgement by, other joint auditors, <strong>he should communicate the same to all the other joint auditors in writing</strong>. This should be done by the submission of a report or note prior to the finalisation of the audit.</p>
+
+            <h3 class="text-cyan-700 font-extrabold mb-2 uppercase text-sm tracking-widest">⚖️ Relationship among Joint Auditors and Their Responsibility:</h3>
+            <p class="mb-3 italic font-medium">In respect of audit work divided among the joint auditors, each joint auditor is responsible only for the work allocated to him, whether or not he has prepared a separate report on the work performed by him. On the other hand, all the joint auditors are <strong>jointly and severally responsible</strong>:</p>
+            <ul class="mb-6 space-y-4">
+                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of the audit work which is <strong>not divided</strong> among the joint auditors and is carried out by all of them;</li>
+                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of <strong>decisions taken by all the joint auditors</strong> concerning the nature, timing or extent of the audit procedures to be performed by any of the joint auditors. It may, however, be clarified that all the joint auditors are responsible only in respect of the appropriateness of the decisions concerning the nature, timing or extent of the audit procedures agreed upon among them; proper execution of these audit procedures is the separate and specific responsibility of the joint auditor concerned;</li>
+                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 in respect of matters which are brought to the notice of the joint auditors by any one of them and on which there is an <strong>agreement among the joint auditors</strong>;</li>
+                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 for examining that the <strong>financial statements of the entity comply with the disclosure requirements</strong> of the relevant statute; and</li>
+                <li class="pl-4 border-l-2 border-cyan-300 italic">🔸 for ensuring that the <strong>audit report complies with the requirements</strong> of the relevant statute.</li>
             </ul>
+            <p class="p-3 bg-slate-100 rounded-xl font-medium italic text-slate-500 text-xs">If any matters of the nature referred to in (B) above are brought to the attention of the entity or other joint auditors by an auditor after the audit report has been submitted, the other joint auditors would not be responsible for those matters.</p>
+
+            <h4 class="text-indigo-700 font-black mt-4 mb-1">🔗 Dependence on Other Auditors:</h4>
+            <p class="mb-4 italic text-sm">Each joint auditor is entitled to assume that the other joint auditors have carried out their part of the audit work in accordance with the generally accepted audit procedures. It is not necessary for a joint auditor to review the work performed by other joint auditors or perform any tests in order to ascertain whether the work has actually been performed in such a manner. Each joint auditor is entitled to rely upon the other joint auditors for bringing to his notice any departure from generally accepted accounting principles or any material error noticed in the course of the audit.</p>
+
+            <h4 class="text-indigo-700 font-black mb-1">📢 Reporting Responsibilities:</h4>
+            <p class="text-sm">Normally, the joint auditors are able to arrive at an agreed report. However, where the joint auditors are in <strong>disagreement</strong> with regard to any matters to be covered by the report, each one of them should express his own opinion through a <strong>separate report</strong>. A joint auditor is not bound by the views of the majority of the joint auditors regarding matters to be covered in the report and should express his opinion in a separate report in case of a disagreement.</p>
         `
     },
     {
         id: 8,
+        section: "Company Audit",
+        topic: "📜 Secretarial Audit",
+        meta: "(Study Material) (PYQ D' 24)",
+        question: "Illustrate the provisions of Companies Act, 2013 and SEBI Regulations relating to the applicability and conduct of Secretarial Audit.",
+        answer: `
+            <h3 class="text-blue-700 font-extrabold mb-4 uppercase tracking-tighter border-b-2 border-blue-100 pb-2">📜 Applicability and Conduct of Secretarial Audit:</h3>
+            
+            <h4 class="text-indigo-700 font-black mb-1 underline decoration-indigo-200">🏛️ The Companies Act 2013:</h4>
+            <p class="mb-3 italic font-medium">As per the provision of <strong>Section 204(1)</strong> of the Companies Act, 2013 read with Rule 9 of the Companies (Appointment and Remuneration of Managerial Personnel) Rules, 2014:</p>
+            <ul class="mb-6 space-y-2 font-black text-indigo-900 border-l-4 border-indigo-500 pl-4">
+                <li class="flex items-center gap-2">✅ <span>Every <strong>listed company</strong>;</span></li>
+                <li class="flex items-center gap-2">✅ <span>Every <strong>public company</strong> having a paid-up share capital of <strong>50 crore rupees or more</strong>; or</span></li>
+                <li class="flex items-center gap-2">✅ <span>Every <strong>public company</strong> having a turnover of <strong>250 crore rupees or more</strong>; or</span></li>
+                <li class="flex items-center gap-2">✅ <span>Every company having <strong>outstanding loans or borrowings</strong> from banks or public financial institutions of <strong>100 crore rupees or more</strong>.</span></li>
+            </ul>
+            <p class="mb-4 italic text-slate-700">- is required to annex with its Board’s Report made in terms of Section 134(3) of the Companies Act, 2013, a <strong>Secretarial Audit Report</strong>, given by a Company Secretary in practice, in <strong>Form No. MR-3</strong>.</p>
+            <p class="mb-4 leading-relaxed">As per Section 204(2), it shall be the duty of the company to give all assistance and facilities to the company secretary in practice, for auditing the secretarial and related records of the company.</p>
+            <p class="p-4 bg-rose-50 rounded-2xl border border-rose-100 font-black text-rose-800 italic text-sm">Moreover, Section 204(4) further provides that if a company or any officer of the company or the company secretary in practice, contravenes the provisions of this section, the company, every officer of the company or the company secretary in practice, who is in default, shall be liable to a <strong>penalty of two lakh rupees</strong>.</p>
+            
+            <h4 class="text-indigo-700 font-black mt-8 mb-2 underline decoration-indigo-200">📈 SEBI Regulations:</h4>
+            <p class="mb-4 leading-relaxed">As per Regulation 24A of the SEBI(LODR) Regulations, 2015, every listed entity and its material unlisted subsidiaries incorporated in India shall undertake <strong>secretarial audit</strong> and shall annex a secretarial audit report given by a company secretary in practice, in such form as specified, with the annual report of the listed entity.</p>
+            <p class="p-4 bg-indigo-900 text-white rounded-3xl shadow-xl italic font-medium text-sm">In addition to the above, every listed entity shall submit a <strong>secretarial compliance report</strong> in such form as specified, to stock exchanges, within <strong>sixty days from end of each financial year</strong>.(Amended by the SEBI (Listing Obligations and Disclosure Requirements)(Second Amendment) Regulations, 21 w.e.f. 5.5.21).</p>
+        `
+    },
+    {
+        id: 9,
+        section: "Company Audit",
+        topic: "🏭 Cost Audit Applicability",
+        meta: "(Study Material) (PYQ D' 18)",
+        question: "Discuss the relevant provisions of Companies (Cost Records and Audit) Rules 2014 on applicability of Cost Audit to different sectors.",
+        answer: `
+            <h3 class="text-orange-600 font-extrabold mb-4 uppercase tracking-tighter">🏭 Applicability of Cost Audit:</h3>
+            <p class="mb-4 font-medium">The provisions regarding applicability of cost audit is explained in Companies (Cost Records and Audit) Rules 2014. Accordingly,</p>
+            <ul class="space-y-4 font-black text-orange-900 pl-4 border-l-4 border-orange-500 italic">
+                <li class="flex items-start gap-2">⚙️ <span>The Rules have classified sectors/industries under <strong>Regulated and Non-Regulated sectors</strong>. The sectors/industries covered under Table A of the Rules are under the Regulated Sector and sectors/industries covered under Table B are under the Non-Regulated Sector.</span></li>
+                <li class="flex items-start gap-2">⚙️ <span>Every company, including foreign companies defined in clause (42) of section 2 of the Act, engaged in the production of the goods or providing services, specified in Tables A and B, having an <strong>overall turnover from all its products and services of rupees thirty five crore or more</strong> during the immediately preceding financial year, shall be required to maintain cost accounting records.</span></li>
+                <li class="flex items-start gap-2">⚙️ <span>However, foreign companies having only liaison office in India and engaged in production, import and supply or trading of <strong>medical devices</strong> listed in Sl. 33 of Table B are <strong>exempted</strong>.</span></li>
+                <li class="flex items-start gap-2">⚙️ <span>Further, companies which are classified as a <strong>micro enterprise or a small enterprise</strong> including as per the turnover criteria under subsection (9) of section 7 of the Micro, Small and Medium Enterprises Development Act, 2006 (27 of 2006) are also <strong>excluded</strong> from the purview of the Rules.</span></li>
+            </ul>
+        `
+    },
+    {
+        id: 10,
         section: "Company Audit",
         topic: "📜 Cost Audit Rules",
         meta: "(PYQ J' 19)",
@@ -230,49 +273,6 @@ const auditData = [
                     <p class="italic text-sm font-medium text-slate-700">the Board shall appoint an individual who is a cost accountant in practice or a firm of cost accountants in practice as cost auditor and the remuneration of such cost auditor shall be <strong>ratified by shareholders subsequently</strong>.</p>
                 </div>
             </div>
-        `
-    },
-    {
-        id: 9,
-        section: "Company Audit",
-        topic: "🏭 Cost Audit Applicability",
-        meta: "(Study Material) (PYQ D' 18)",
-        question: "Discuss the relevant provisions of Companies (Cost Records and Audit) Rules 2014 on applicability of Cost Audit to different sectors.",
-        answer: `
-            <h3 class="text-orange-600 font-extrabold mb-4 uppercase tracking-tighter">🏭 Applicability of Cost Audit:</h3>
-            <p class="mb-4 font-medium">The provisions regarding applicability of cost audit is explained in Companies (Cost Records and Audit) Rules 2014. Accordingly,</p>
-            <ul class="space-y-4 font-black text-orange-900 pl-4 border-l-4 border-orange-500 italic">
-                <li class="flex items-start gap-2">⚙️ <span>The Rules have classified sectors/industries under <strong>Regulated and Non-Regulated sectors</strong>. The sectors/industries covered under Table A of the Rules are under the Regulated Sector and sectors/industries covered under Table B are under the Non-Regulated Sector.</span></li>
-                <li class="flex items-start gap-2">⚙️ <span>Every company, including foreign companies defined in clause (42) of section 2 of the Act, engaged in the production of the goods or providing services, specified in Tables A and B, having an <strong>overall turnover from all its products and services of rupees thirty five crore or more</strong> during the immediately preceding financial year, shall be required to maintain cost accounting records.</span></li>
-                <li class="flex items-start gap-2">⚙️ <span>However, foreign companies having only liaison office in India and engaged in production, import and supply or trading of <strong>medical devices</strong> listed in Sl. 33 of Table B are <strong>exempted</strong>.</span></li>
-                <li class="flex items-start gap-2">⚙️ <span>Further, companies which are classified as a <strong>micro enterprise or a small enterprise</strong> including as per the turnover criteria under subsection (9) of section 7 of the Micro, Small and Medium Enterprises Development Act, 2006 (27 of 2006) are also <strong>excluded</strong> from the purview of the Rules.</span></li>
-            </ul>
-        `
-    },
-    {
-        id: 10,
-        section: "Company Audit",
-        topic: "📜 Secretarial Audit",
-        meta: "(Study Material) (PYQ D' 24)",
-        question: "Illustrate the provisions of Companies Act, 2013 and SEBI Regulations relating to the applicability and conduct of Secretarial Audit.",
-        answer: `
-            <h3 class="text-blue-700 font-extrabold mb-4 uppercase tracking-tighter border-b-2 border-blue-100 pb-2">📜 Applicability and Conduct of Secretarial Audit:</h3>
-            
-            <h4 class="text-indigo-700 font-black mb-1 underline decoration-indigo-200">🏛️ The Companies Act 2013:</h4>
-            <p class="mb-3 italic font-medium">As per the provision of <strong>Section 204(1)</strong> of the Companies Act, 2013 read with Rule 9 of the Companies (Appointment and Remuneration of Managerial Personnel) Rules, 2014:</p>
-            <ul class="mb-6 space-y-2 font-black text-indigo-900 border-l-4 border-indigo-500 pl-4">
-                <li class="flex items-center gap-2">✅ <span>Every <strong>listed company</strong>;</span></li>
-                <li class="flex items-center gap-2">✅ <span>Every <strong>public company</strong> having a paid-up share capital of <strong>50 crore rupees or more</strong>; or</span></li>
-                <li class="flex items-center gap-2">✅ <span>Every <strong>public company</strong> having a turnover of <strong>250 crore rupees or more</strong>; or</span></li>
-                <li class="flex items-center gap-2">✅ <span>Every company having <strong>outstanding loans or borrowings</strong> from banks or public financial institutions of <strong>100 crore rupees or more</strong>.</span></li>
-            </ul>
-            <p class="mb-4 italic text-slate-700">- is required to annex with its Board’s Report made in terms of Section 134(3) of the Companies Act, 2013, a <strong>Secretarial Audit Report</strong>, given by a Company Secretary in practice, in <strong>Form No. MR-3</strong>.</p>
-            <p class="mb-4 leading-relaxed">As per Section 204(2), it shall be the duty of the company to give all assistance and facilities to the company secretary in practice, for auditing the secretarial and related records of the company.</p>
-            <p class="p-4 bg-rose-50 rounded-2xl border border-rose-100 font-black text-rose-800 italic text-sm">Moreover, Section 204(4) further provides that if a company or any officer of the company or the company secretary in practice, contravenes the provisions of this section, the company, every officer of the company or the company secretary in practice, who is in default, shall be liable to a <strong>penalty of two lakh rupees</strong>.</p>
-            
-            <h4 class="text-indigo-700 font-black mt-8 mb-2 underline decoration-indigo-200">📈 SEBI Regulations:</h4>
-            <p class="mb-4 leading-relaxed">As per Regulation 24A of the SEBI(LODR) Regulations, 2015, every listed entity and its material unlisted subsidiaries incorporated in India shall undertake <strong>secretarial audit</strong> and shall annex a secretarial audit report given by a company secretary in practice, in such form as specified, with the annual report of the listed entity.</p>
-            <p class="p-4 bg-indigo-900 text-white rounded-3xl shadow-xl italic font-medium text-sm">In addition to the above, every listed entity shall submit a <strong>secretarial compliance report</strong> in such form as specified, to stock exchanges, within <strong>sixty days from end of each financial year</strong>.(Amended by the SEBI (Listing Obligations and Disclosure Requirements)(Second Amendment) Regulations, 21 w.e.f. 5.5.21).</p>
         `
     },
     {
@@ -1591,4 +1591,5 @@ const auditData = [
             </ul>
         `
     }
+
 ];
