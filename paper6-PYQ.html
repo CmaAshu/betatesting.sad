@@ -210,29 +210,34 @@
             .confetti-particle { @apply fixed top-[-20px] pointer-events-none z-[9999] animate-confetti-fall; }
 
             /* =========================================
-               ENHANCED GRID TABLE STYLING
+               ENHANCED GRID TABLE STYLING - MOBILE FIX
                ========================================= */
             
             /* Responsive Wrapper */
             .custom-table-wrapper {
                 @apply w-full overflow-x-auto my-6 rounded-lg shadow-sm border border-slate-200;
+                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                max-width: 100%; /* Ensure it doesn't overflow parent */
+                display: block; /* Ensure block formatting context */
             }
 
             /* Table Basics */
             .generated-table {
                 @apply w-full border-collapse text-sm text-left;
-                min-width: 300px; /* Ensure table doesn't squash too much */
+                min-width: 100%; /* Allow table to shrink to container */
+                /* Removed fixed min-width to prevent forcing horizontal scroll unnecessarily on very small screens if content fits */
             }
 
             /* Header Styling */
             .generated-table thead th {
                 @apply bg-primary text-white p-3 font-bold uppercase tracking-wider border border-indigo-400 text-xs md:text-sm;
+                white-space: nowrap; /* Keep headers on one line if possible */
             }
 
             /* Cell Styling - GRID LINES */
             .generated-table th, 
             .generated-table td {
-                @apply border border-slate-300 p-3 align-top;
+                @apply border border-slate-300 p-2 md:p-3 align-top; /* Reduced padding on mobile */
             }
 
             /* Zebra Striping */
