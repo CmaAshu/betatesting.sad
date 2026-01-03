@@ -356,7 +356,7 @@ const quizSets = [
                     "Check",
                     "Act"
                 ],
-                "c": "Check"
+                    "c": "Check"
             },
             {
                 "q": "What does MIS stand for________________________.",
@@ -1724,7 +1724,7 @@ const quizSets = [
                 "c": "Strategic acquisitions"
             },
             {
-                "q": _____________ are often done by Private Equities, Venture Capitalists and portfolio companies who acquirer a company purely for their value and normally do not make significant operational changes.",
+                "q": "_____________ are often done by Private Equities, Venture Capitalists and portfolio companies who acquirer a company purely for their value and normally do not make significant operational changes.",
                 "o": [
                     "Financial Acquisition",
                     "Strategic acquisitions",
